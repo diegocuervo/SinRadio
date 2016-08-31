@@ -83,7 +83,7 @@ public class Gps_ubicacion extends AppCompatActivity {
         };
 
         locManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 30000, 0, locListener);
+                LocationManager.GPS_PROVIDER, 1000, 0, locListener);
     }
 
     private void mostrarPosicion(Location loc) {

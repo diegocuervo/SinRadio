@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -40,7 +41,8 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 private Timer timer;
 public Activity actividad;
-
+    private LocationManager locManager;
+    private LocationListener locListener;
 
 
 
@@ -48,10 +50,9 @@ public Activity actividad;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        MyLocationListener mlocListener = new MyLocationListener();
-        mlocListener.setMainActivity(this);
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,(LocationListener) mlocListener);
+
+
+
         this.actividad=this;
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
@@ -63,34 +64,83 @@ public Activity actividad;
 
     class EnviarPosicion extends TimerTask {
         public String APP_TAG = "SinRadio-Chofer";
-
-
+        Double latitude;
+        Double longitude;
         @Override
         public void run() {
+            runOnUiThread(new Runnable() {
 
-           // mlocListener.setMainActivity(this);
+                @Override
+                public void run() {
+                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 
-         //   Toast.makeText(getApplicationContext(), "envio posicion", Toast.LENGTH_SHORT).show();
-            JSONObject jsonObject= new JSONObject();
+
+                    locManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER, 1000, 0,
+                            locationListener);
 
 
-            try {
+                    JSONObject jsonObject = new JSONObject();
 
-                jsonObject.put("estadoElegido", "libre");
-            }
 
-            catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                    try {
 
-            }
-            String data =  jsonObject.toString();
-            String baseUrl = "http://192.168.0.102:3000/";
-            new MyHttpPostRequest().execute(baseUrl, data);
-            Log.w(APP_TAG,"Mensaje cada 5 segundos de main activity ");
+                        jsonObject.put("estadoElegido", "libre");
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
 
+                    }
+                    String data = jsonObject.toString();
+                    String baseUrl = "http://192.168.0.102:3000/";
+                    new MyHttpPostRequest().execute(baseUrl, data);
+                    Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
+
+                }
+
+        });
         }
+
+    private void updateWithNewLocation(Location location) {
+        String latLongString = "";
+        try {
+            if (location != null) {
+
+                Log.e("test", "gps is on send");
+                latitude = (location.getLatitude());
+                longitude = (location.getLongitude());
+                Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
+                Log.e("test", "location send");
+
+                locManager.removeUpdates(locationListener);
+
+
+                latLongString = "Lat:" + latitude + "\nLong:" + longitude;
+                Log.w("CurrentLocLatLong", latLongString);
+            } else {
+                latLongString = "No location found";
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            updateWithNewLocation(location);
+        }
+
+        public void onProviderDisabled(String provider) {
+            updateWithNewLocation(null);
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    };
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
