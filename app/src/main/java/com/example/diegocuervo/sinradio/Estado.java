@@ -74,7 +74,7 @@ public class Estado  extends AppCompatActivity {
 
         }
         String data =  jsonObject.toString();
-        String baseUrl = "http://192.168.0.102:3000/";
+        String baseUrl = "http://Sinradio.ddns.net:3000/";
         new MyHttpPostRequest().execute(baseUrl, data);
     }
 
