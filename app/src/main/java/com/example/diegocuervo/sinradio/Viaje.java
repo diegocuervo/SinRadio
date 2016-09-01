@@ -54,7 +54,7 @@ public class Viaje extends AppCompatActivity {
 
         }
         String data =  jsonObject.toString();
-        String baseUrl = "http://186.18.192.150:5508/";
+        String baseUrl = "http://192.168.0.102:3000/";
         new MyHttpPostRequest().execute(baseUrl, data);
 
 
