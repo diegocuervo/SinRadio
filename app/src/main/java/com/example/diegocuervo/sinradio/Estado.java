@@ -55,7 +55,7 @@ public class Estado  extends AppCompatActivity {
 
         }
         String data =  jsonObject.toString();
-        String baseUrl = "http://192.168.0.102:3000/";
+        String baseUrl = "http://sinradio.ddns.net:45507/";
         new MyHttpPostRequest().execute(baseUrl, data);
     }
     public void btn_ocupado(View view) {
@@ -74,7 +74,7 @@ public class Estado  extends AppCompatActivity {
 
         }
         String data =  jsonObject.toString();
-        String baseUrl = "http://192.168.0.102:3000/";
+        String baseUrl = "http://sinradio.ddns.net:45507/";
         new MyHttpPostRequest().execute(baseUrl, data);
     }
 

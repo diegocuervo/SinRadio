@@ -187,7 +187,7 @@ public class Tabla{
                         String data =  jsonObject.toString();
 
                         //Se define la URL del servidor a la cual se enviarán lso datos
-                        String baseUrl = "http://192.168.0.102:3000/";
+                        String baseUrl = "http://sinradio.ddns.net:45507/";
 
                         new MyHttpPostRequest().execute(baseUrl, data);
 

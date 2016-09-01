@@ -93,7 +93,7 @@ public Activity actividad;
 
                     }
                     String data = jsonObject.toString();
-                    String baseUrl = "http://Sinradio.ddns.net:3000/";
+                    String baseUrl = "http://sinradio.ddns.net:45507/";
                     new MyHttpPostRequest().execute(baseUrl, data);
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
 
