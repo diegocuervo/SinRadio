@@ -57,7 +57,7 @@ public Activity actividad;
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
-        timer.scheduleAtFixedRate(enviarPos,0,5000);
+        timer.scheduleAtFixedRate(enviarPos,0,20000);
 
 
     }
@@ -86,7 +86,7 @@ public Activity actividad;
 
                     try {
 
-                        jsonObject.put("estadoElegido", "libre");
+                        jsonObject.put("estadoElegido", latitude);
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -234,8 +234,8 @@ public Activity actividad;
     public void btn_salir(View view) {
 
         //System.exit(0);
-        Intent i = new Intent(this, Gps_ubicacion.class );
-        startActivity(i);
+        //Intent i = new Intent(this, Gps_ubicacion.class );
+        //startActivity(i);
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.diegocuervo.sinradio;
+/*package com.example.diegocuervo.sinradio;
 
 import android.content.Context;
 import android.location.Location;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 /**
  * Created by Diego Cuervo on 09/08/2016.
  */
-public class Gps_ubicacion extends AppCompatActivity {
+/*public class Gps_ubicacion extends AppCompatActivity {
 
     private Button btnActualizar;
     private Button btnDesactivar;
@@ -110,3 +110,4 @@ public class Gps_ubicacion extends AppCompatActivity {
     }
 
 }
+*/
