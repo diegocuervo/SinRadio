@@ -58,18 +58,7 @@ public class Viaje extends AppCompatActivity {
         new MyHttpPostRequest().execute(baseUrl, data);
 
 
-        Tabla tabla = new Tabla(this, (TableLayout)findViewById(R.id.tabla));
-        tabla.agregarCabecera(R.array.cabecera_tabla);
-        for(int i = 0; i < 15; i++)
-        {
-            ArrayList<String> elementos = new ArrayList<String>();
-            elementos.add(Integer.toString(i));
-            elementos.add("Casilla [" + i + ", 0]");
-            elementos.add("Casilla [" + i + ", 1]");
-            elementos.add("Casilla [" + i + ", 2]");
-            elementos.add("Casilla [" + i + ", 3]");
-            tabla.agregarFilaTabla(elementos);
-        }
+
     }
 
 
@@ -94,7 +83,7 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
             //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
             List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
             nvp.add(new BasicNameValuePair("evento", "pedirViajes"));
-            nvp.add(new BasicNameValuePair("id_movil", "14"));
+            nvp.add(new BasicNameValuePair("id_movil", "1"));
 
             // post.setHeader("Content-type", "application/json");
             post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
@@ -134,7 +123,37 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
     protected void onPostExecute(String result) {
         //Se obtiene el resultado de la peticion Asincrona
-        Log.w(APP_TAG,"Resultado obtenido " + result);
+        try {
+            JSONArray array = new JSONArray(result);
+
+            JSONObject jsonObject = array.getJSONObject(0);
+
+
+            //   Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
+            // Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
+
+            Log.w(APP_TAG, "Resultado obtenido " + result);
+            Tabla tabla = new Tabla(actividad, (TableLayout) findViewById(R.id.tabla));
+            tabla.agregarCabecera(R.array.cabecera_tabla);
+            for(int i = 0; i < 2; i++)
+              {
+            ArrayList<String> elementos = new ArrayList<String>();
+            elementos.add(Integer.toString(i));
+
+            elementos.add(jsonObject.getString("id_cliente"));
+            elementos.add(jsonObject.getString("fecha_inicio"));
+            elementos.add(jsonObject.getString("fecha_fin"));
+            elementos.add(jsonObject.getString("monto"));
+            tabla.agregarFilaTabla(elementos);
+            }
+        }
+            catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+
+            }
+
+
        /* try {
             JSONArray array = new JSONArray(result);
 

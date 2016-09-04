@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.content.Intent;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -43,21 +44,23 @@ private Timer timer;
 public Activity actividad;
     private LocationManager locManager;
     private LocationListener locListener;
-
-
-
+    private TextView nombre;
+    private String nom;
+    private String ape;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        ape= getIntent().getExtras().getString("apellido");
+        nom= getIntent().getExtras().getString("nombre");
+        nombre = (TextView)findViewById(R.id.textView);
+        nombre.setText(nom+" "+ape);
 
         this.actividad=this;
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
-        timer.scheduleAtFixedRate(enviarPos,0,20000);
+        timer.scheduleAtFixedRate(enviarPos,0,5000);
 
 
     }
@@ -74,11 +77,26 @@ public Activity actividad;
                 public void run() {
                     locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+                    Location loc =
+                            locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    updateWithNewLocation(loc);
+                    locListener = new LocationListener() {
+                        public void onLocationChanged(Location location) {
+                            updateWithNewLocation(location);
+                        }
+                        public void onProviderDisabled(String provider){
 
+                        }
+                        public void onProviderEnabled(String provider){
 
+                        }
+                        public void onStatusChanged(String provider, int status, Bundle extras){
+
+                        }
+                    };
                     locManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER, 1000, 0,
-                            locationListener);
+                            locListener);
 
 
                     JSONObject jsonObject = new JSONObject();
@@ -113,7 +131,7 @@ public Activity actividad;
                 Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
                 Log.e("test", "location send");
 
-                locManager.removeUpdates(locationListener);
+               // locManager.removeUpdates(locationListener);
 
 
                 latLongString = "Lat:" + latitude + "\nLong:" + longitude;
@@ -126,7 +144,7 @@ public Activity actividad;
 
     }
 
-    private final LocationListener locationListener = new LocationListener() {
+    /*private final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             updateWithNewLocation(location);
         }
@@ -140,7 +158,7 @@ public Activity actividad;
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
-    };
+    };*/
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
@@ -233,9 +251,12 @@ public Activity actividad;
 
     public void btn_salir(View view) {
 
-        //System.exit(0);
+      // System.exit(0);
         //Intent i = new Intent(this, Gps_ubicacion.class );
         //startActivity(i);
+       // Toast.makeText(actividad, "Recuerda que al cerrar ", Toast.LENGTH_SHORT).show();
+        moveTaskToBack(true);
+
 
     }
 
@@ -247,6 +268,14 @@ public Activity actividad;
     public void btn_emergencia(View view) {
         Intent i = new Intent(this, Notificacion.class );
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+       // Toast.makeText(actividad, "cuervo", Toast.LENGTH_SHORT).show();
+        //this.finish();
+        //System.exit(0);
+        moveTaskToBack(true);
     }
 
 }
