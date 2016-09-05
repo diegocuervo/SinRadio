@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -40,13 +42,32 @@ public class Validacion_inicial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_inicial);
         this.actividad=this;
+
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        JSONObject jsonObject = new JSONObject();
+
+
+        try {
+            jsonObject.put("numero_cel", 0);
+            jsonObject.put("android_id", id);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+        String data = jsonObject.toString();
+        String baseUrl = "http://sinradio.ddns.net:45507/";
+        new MyHttpPostRequest().execute(baseUrl, data);
+        SystemClock.sleep(1000);
+
     }
 
 
     public void btn_validar(View view) {
 
           num_text = (EditText) findViewById(R.id.editText);
-
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         numero =(String.valueOf(num_text.getText()));
        // Toast.makeText(actividad, numero, Toast.LENGTH_SHORT).show();
 
@@ -56,6 +77,7 @@ public class Validacion_inicial extends AppCompatActivity {
         try {
 
             jsonObject.put("numero_cel", numero);
+            jsonObject.put("android_id", id);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -94,10 +116,10 @@ public class Validacion_inicial extends AppCompatActivity {
                 HttpPost post = new HttpPost(baseUrl);
 
                 //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
-                List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
                 nvp.add(new BasicNameValuePair("evento", "validar"));
                 nvp.add(new BasicNameValuePair("numero_cel", obj.getString("numero_cel")));
-
+                nvp.add(new BasicNameValuePair("android_id", obj.getString("android_id")));
                 // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
@@ -170,13 +192,13 @@ public class Validacion_inicial extends AppCompatActivity {
                     startActivity(i);
                 }
                 else{
-                    Toast.makeText(actividad, "No existe ese numero en nuestra base de datos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(actividad, "No existe ese numero en nuestra base de datos entro else", Toast.LENGTH_SHORT).show();
                 }
             }
             catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                Toast.makeText(actividad, "No existe ese numero en nuestra base de datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(actividad, "No existe ese numero en nuestra base de datos entro catch", Toast.LENGTH_SHORT).show();
             }
 
 
