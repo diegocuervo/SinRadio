@@ -3,6 +3,7 @@ package com.example.diegocuervo.sinradio;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TableLayout;
@@ -39,13 +40,14 @@ public class Viaje extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viajes);
         this.actividad=this;
-
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         JSONObject jsonObject= new JSONObject();
 
 
         try {
 
-            jsonObject.put("evento", "pedirViajes");
+
+            jsonObject.put("id_android",id );
         }
 
         catch (JSONException e) {
@@ -75,6 +77,7 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
         String jsonData = params[1];
 
         try {
+            JSONObject obj = new JSONObject(jsonData);
             //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
             HttpClient httpClient = new DefaultHttpClient();
             //Creamos objeto para armar peticion de tipo HTTP POST
@@ -83,7 +86,7 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
             //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
             List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
             nvp.add(new BasicNameValuePair("evento", "pedirViajes"));
-            nvp.add(new BasicNameValuePair("id_movil", "1"));
+            nvp.add(new BasicNameValuePair("id_android", obj.getString("id_android")));
 
             // post.setHeader("Content-type", "application/json");
             post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
@@ -125,26 +128,30 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
         //Se obtiene el resultado de la peticion Asincrona
         try {
             JSONArray array = new JSONArray(result);
-
-            JSONObject jsonObject = array.getJSONObject(0);
+            Integer cantidad = array.length();
+            Integer k=0;
+            Tabla tabla = new Tabla(actividad, (TableLayout) findViewById(R.id.tabla));
+            tabla.agregarCabecera(R.array.cabecera_tabla);
+            while(k<cantidad){
+            JSONObject jsonObject = array.getJSONObject(k);
 
 
             //   Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
             // Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
 
             Log.w(APP_TAG, "Resultado obtenido " + result);
-            Tabla tabla = new Tabla(actividad, (TableLayout) findViewById(R.id.tabla));
-            tabla.agregarCabecera(R.array.cabecera_tabla);
-            for(int i = 0; i < 2; i++)
-              {
-            ArrayList<String> elementos = new ArrayList<String>();
-            elementos.add(Integer.toString(i));
 
-            elementos.add(jsonObject.getString("id_cliente"));
-            elementos.add(jsonObject.getString("fecha_inicio"));
-            elementos.add(jsonObject.getString("fecha_fin"));
-            elementos.add(jsonObject.getString("monto"));
-            tabla.agregarFilaTabla(elementos);
+
+                ArrayList<String> elementos = new ArrayList<String>();
+
+                elementos.add(jsonObject.getString("id"));
+                elementos.add(jsonObject.getString("id_cliente"));
+                elementos.add(jsonObject.getString("fecha_inicio"));
+                elementos.add(jsonObject.getString("fecha_fin"));
+                elementos.add(jsonObject.getString("monto"));
+                tabla.agregarFilaTabla(elementos);
+                k++;
+
             }
         }
             catch (JSONException e) {
