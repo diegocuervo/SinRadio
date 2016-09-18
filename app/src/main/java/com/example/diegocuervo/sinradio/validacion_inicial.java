@@ -47,28 +47,7 @@ public class Validacion_inicial extends AppCompatActivity {
         setContentView(R.layout.validacion_inicial);
         this.actividad=this;
 
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        JSONObject jsonObject = new JSONObject();
-
         new HttpGetDemo().execute();
-
-        /*try {
-          //  numero = "0";
-          //  jsonObject.put("numero_cel", numero);
-            jsonObject.put("android_id", id);
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-
-
-
-        String data = jsonObject.toString();
-        String baseUrl = "http://API.SIN.RADIO.COM.AR/chofer/";
-        new MyHttpPostRequest().execute(baseUrl, data);
-        SystemClock.sleep(1000);*/
 
     }
 
@@ -80,6 +59,7 @@ public class Validacion_inicial extends AppCompatActivity {
         numero =(String.valueOf(num_text.getText()));
 
         new HttpGetDemotel().execute(numero);
+
         /*JSONObject jsonObject = new JSONObject();
 
 
@@ -115,7 +95,7 @@ public class Validacion_inicial extends AppCompatActivity {
         final String GetSomething()
         {
 
-            String url = "http://API.SIN-RADIO.COM.AR/chofer/sendSMS/"+1131154958;
+            String url = "http://API.SIN-RADIO.COM.AR/chofer/sendSMS/"+num;
             BufferedReader inStream = null;
             try {
                 HttpClient httpClient = new DefaultHttpClient();
@@ -155,11 +135,15 @@ public class Validacion_inicial extends AppCompatActivity {
         {
             Log.w("chofer","Resultado obtenido " + result);
             Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(actividad, ValidacionSMS.class);
+
+            startActivity(i);
+            Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
         }
     }
 
     public class HttpGetDemo extends AsyncTask<Number, Void, String> {
-
+        String resultado;
         String result = "fail";
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
@@ -204,6 +188,7 @@ public class Validacion_inicial extends AppCompatActivity {
                     }
                 }
             }
+            resultado=result;
             return result;
         }
 
@@ -211,6 +196,8 @@ public class Validacion_inicial extends AppCompatActivity {
         {
             Log.w("chofer","Resultado obtenido " + result);
             Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
+
+
         }
     }
 
