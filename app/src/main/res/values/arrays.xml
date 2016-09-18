@@ -3,10 +3,10 @@
 
     <!--Array con los valores de la cabecera de la tabla-->
     <string-array name="cabecera_tabla">
-        <item>Id de la fila</item>
-        <item>Valor</item>
-        <item>Valor 2</item>
-        <item>Valor 3</item>
-        <item>Valor 4</item>
+        <item>ID Viaje</item>
+        <item>ID Cliente</item>
+        <item>Origen</item>
+        <item>Destino</item>
+        <item>Monto</item>
     </string-array>
 </resources>

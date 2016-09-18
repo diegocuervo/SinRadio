@@ -146,8 +146,8 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
                 elementos.add(jsonObject.getString("id"));
                 elementos.add(jsonObject.getString("id_cliente"));
-                elementos.add(jsonObject.getString("fecha_inicio"));
-                elementos.add(jsonObject.getString("fecha_fin"));
+                elementos.add(jsonObject.getString("origen"));
+                elementos.add(jsonObject.getString("destino"));
                 elementos.add(jsonObject.getString("monto"));
                 tabla.agregarFilaTabla(elementos);
                 k++;

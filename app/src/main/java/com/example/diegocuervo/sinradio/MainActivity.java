@@ -104,7 +104,7 @@ public Activity actividad;
 
                     try {
 
-                        jsonObject.put("estadoElegido", latitude);
+                        jsonObject.put("latitud", latitude);
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -162,7 +162,7 @@ public Activity actividad;
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
-        public String APP_TAG = "ECTUploadData";
+        public String APP_TAG = "AppChofer";
         protected String doInBackground(String... params) {
             BufferedReader in = null;
             String baseUrl = params[0];
@@ -179,8 +179,8 @@ public Activity actividad;
 
                 //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
-                nvp.add(new BasicNameValuePair("evento", "cambioEstado"));
-                nvp.add(new BasicNameValuePair("estado", obj.getString("estadoElegido")));
+                nvp.add(new BasicNameValuePair("evento", "ubicacionGps"));
+                nvp.add(new BasicNameValuePair("estado", obj.getString("latitud")));
 
                 // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
@@ -201,7 +201,7 @@ public Activity actividad;
                 return sb.toString();
 
             } catch (Exception e) {
-                return "Exception happened: " + e.getMessage();
+                return "Comienze a moverse para reportar posicion" + e.getMessage();
             } finally {
                 if (in != null) {
                     try {

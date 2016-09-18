@@ -107,7 +107,7 @@ public class Tabla{
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GRAY);
                 System.out.println("Row clicked: " + v.getId());
-                 TextView destino = (TextView)fila.getChildAt(1);
+                 TextView destino = (TextView)fila.getChildAt(3);
                 String destino_viaje= destino.getText().toString();
 
                 showInputDialog(v.getId(),destino_viaje);
