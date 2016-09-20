@@ -39,13 +39,12 @@ public class ValidacionSMS extends AppCompatActivity {
     public Activity actividad;
     String sms;
     EditText num_text;
-
+    Integer numero;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_sms);
         this.actividad=this;
-
-
+        numero= getIntent().getExtras().getInt("numero");
 
     }
 
@@ -56,33 +55,45 @@ public class ValidacionSMS extends AppCompatActivity {
 
         sms =(String.valueOf(num_text.getText()));
 
-        new HttpGetDemotel().execute(sms);
+        new HttpGetDemotel().execute(sms,numero.toString());
 
 
     }
     public class HttpGetDemotel extends AsyncTask<String, Void, String> {
 
         String sms;
-
+        String num;
         String result = "fail";
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(String... params) {
             // TODO Auto-generated method stub
             this.sms = params[0];
-
+            this.num="1131154958";
+            Log.w("chofer","armo parametro");
             return GetSomething();
         }
 
         final String GetSomething()
         {
 
-            String url = "http://API.SIN-RADIO.COM.AR/chofer/sendSMS/"+id;
+            String url = "http://API.SIN-RADIO.COM.AR/chofer/"+id;
             BufferedReader inStream = null;
             try {
+
+
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
+                nvp.add(new BasicNameValuePair("tel", num));
+                nvp.add(new BasicNameValuePair("claveSMS", sms));
+                Log.w("chofer",nvp.toString());
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPut httpRequest = new HttpPut(url);
-                HttpResponse response = httpClient.execute(httpRequest);
+                HttpPut httpPut = new HttpPut(url);
+                httpPut.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
+
+
+
+                HttpResponse response = httpClient.execute(httpPut);
+                Log.w("chofer","paso execute");
                 inStream = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
@@ -94,7 +105,7 @@ public class ValidacionSMS extends AppCompatActivity {
                     buffer.append(line + NL);
                 }
                 inStream.close();
-
+                Log.w("chofer","armo parametro");
                 result = buffer.toString();
             } catch (Exception e) {
                 Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
@@ -115,12 +126,9 @@ public class ValidacionSMS extends AppCompatActivity {
 
         protected void onPostExecute(String page)
         {
-            Log.w("chofer","Resultado obtenido " + result);
-            Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(actividad, ValidacionSMS.class);
+            Log.w("chofer","Resultado obtenido en el put " + result);
 
-            startActivity(i);
-            Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

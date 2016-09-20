@@ -136,7 +136,7 @@ public class Validacion_inicial extends AppCompatActivity {
             Log.w("chofer","Resultado obtenido " + result);
             Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
             Intent i = new Intent(actividad, ValidacionSMS.class);
-
+            i.putExtra("numero",num );
             startActivity(i);
             Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
         }
