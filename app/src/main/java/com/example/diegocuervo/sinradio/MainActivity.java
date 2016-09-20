@@ -46,15 +46,15 @@ public Activity actividad;
     private LocationListener locListener;
     private TextView nombre;
     private String nom;
-    private String ape;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ape= getIntent().getExtras().getString("apellido");
+
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
-        nombre.setText(nom+" "+ape);
+        nombre.setText(nom);
 
         this.actividad=this;
         timer = new Timer();

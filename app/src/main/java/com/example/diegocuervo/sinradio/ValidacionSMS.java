@@ -45,9 +45,7 @@ public class ValidacionSMS extends AppCompatActivity {
         setContentView(R.layout.validacion_sms);
         this.actividad=this;
         numero= getIntent().getExtras().getInt("numero");
-
     }
-
 
     public void btn_validar(View view) {
 
@@ -67,10 +65,9 @@ public class ValidacionSMS extends AppCompatActivity {
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(String... params) {
-            // TODO Auto-generated method stub
+
             this.sms = params[0];
-            this.num="1131154958";
-            Log.w("chofer","armo parametro");
+            this.num=params[1];
             return GetSomething();
         }
 
@@ -85,15 +82,12 @@ public class ValidacionSMS extends AppCompatActivity {
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
                 nvp.add(new BasicNameValuePair("tel", num));
                 nvp.add(new BasicNameValuePair("claveSMS", sms));
-                Log.w("chofer",nvp.toString());
+
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPut httpPut = new HttpPut(url);
                 httpPut.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
-
-
-
                 HttpResponse response = httpClient.execute(httpPut);
-                Log.w("chofer","paso execute");
+
                 inStream = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
@@ -105,18 +99,14 @@ public class ValidacionSMS extends AppCompatActivity {
                     buffer.append(line + NL);
                 }
                 inStream.close();
-                Log.w("chofer","armo parametro");
                 result = buffer.toString();
             } catch (Exception e) {
-                Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } finally {
                 if (inStream != null) {
                     try {
                         inStream.close();
                     } catch (IOException e) {
-                        Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -126,9 +116,17 @@ public class ValidacionSMS extends AppCompatActivity {
 
         protected void onPostExecute(String page)
         {
-            Log.w("chofer","Resultado obtenido en el put " + result);
 
-            Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
+            if(result.toString().contains(("OK"))){
+                Log.w("chofer","Resultado obtenido en el put " + result);
+                Intent i = new Intent(actividad, Validacion_inicial.class);
+                startActivity(i);
+
+                Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
+            }
+     else{
+                Toast.makeText(actividad, "El Codigo ingresado no es correcto.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

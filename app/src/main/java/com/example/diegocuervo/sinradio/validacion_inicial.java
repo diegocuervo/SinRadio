@@ -46,36 +46,16 @@ public class Validacion_inicial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_inicial);
         this.actividad=this;
-
         new HttpGetDemo().execute();
-
     }
 
 
     public void btn_validar(View view) {
 
           num_text = (EditText) findViewById(R.id.editText);
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         numero =(String.valueOf(num_text.getText()));
 
         new HttpGetDemotel().execute(numero);
-
-        /*JSONObject jsonObject = new JSONObject();
-
-
-        try {
-
-            jsonObject.put("numero_cel", numero);
-            jsonObject.put("android_id", id);
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-        String data = jsonObject.toString();
-        String baseUrl = "http://sinradio.ddns.net:45507/";
-        new MyHttpPostRequest().execute(baseUrl, data);*/
-
 
     }
     public class HttpGetDemotel extends AsyncTask<String, Void, String> {
@@ -83,10 +63,9 @@ public class Validacion_inicial extends AppCompatActivity {
        String num;
 
         String result = "fail";
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(String... params) {
-            // TODO Auto-generated method stub
+
             this.num = params[0];
 
             return GetSomething();
@@ -115,15 +94,14 @@ public class Validacion_inicial extends AppCompatActivity {
 
                 result = buffer.toString();
             } catch (Exception e) {
-                Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             } finally {
                 if (inStream != null) {
                     try {
                         inStream.close();
                     } catch (IOException e) {
-                        Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
+
                         e.printStackTrace();
                     }
                 }
@@ -133,22 +111,27 @@ public class Validacion_inicial extends AppCompatActivity {
 
         protected void onPostExecute(String page)
         {
-            Log.w("chofer","Resultado obtenido " + result);
-            Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(actividad, ValidacionSMS.class);
-            i.putExtra("numero",num );
-            startActivity(i);
-            Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
+
+            if (result.toString().contains("OK")) {
+                Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
+                Log.w("chofer","Resultado obtenido " + result);
+                Intent i = new Intent(actividad, ValidacionSMS.class);
+                i.putExtra("numero",num );
+                startActivity(i);
+            }
+            else {
+                Toast.makeText(actividad, "El numero ingresado no se encuentra registrado en el sistema.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     public class HttpGetDemo extends AsyncTask<Number, Void, String> {
-        String resultado;
+
+        String nombre;
         String result = "fail";
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(Number... params) {
-            // TODO Auto-generated method stub
 
             return GetSomething();
         }
@@ -175,125 +158,48 @@ public class Validacion_inicial extends AppCompatActivity {
 
                 result = buffer.toString();
             } catch (Exception e) {
-                Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } finally {
                 if (inStream != null) {
                     try {
                         inStream.close();
                     } catch (IOException e) {
-                        Toast.makeText(actividad, "no rompio dentro", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             }
-            resultado=result;
+
             return result;
         }
 
         protected void onPostExecute(String page)
         {
             Log.w("chofer","Resultado obtenido " + result);
-            Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
 
+            if (result.toString().contains("chofer inexistente")) {
+                Toast.makeText(actividad, "Su cuenta no esta verificada. Ingrese su numero de celular.", Toast.LENGTH_SHORT).show();
 
-        }
-    }
-
-    private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
-
-        public String APP_TAG = "ECTUploadData";
-        protected String doInBackground(String... params) {
-            BufferedReader in = null;
-            String baseUrl = params[0];
-            String jsonData = params[1];
-
-
-            try {
-                JSONObject obj = new JSONObject(jsonData);
-
-                HttpClient httpClient = new DefaultHttpClient();
-
-                HttpPost post = new HttpPost(baseUrl);
-
-
-                List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
-               // nvp.add(new BasicNameValuePair("evento", "validar"));
-               // nvp.add(new BasicNameValuePair("numero_cel", obj.getString("numero_cel")));
-                nvp.add(new BasicNameValuePair("android_id", obj.getString("android_id")));
-
-                post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
-
-
-                HttpResponse response = httpClient.execute(post);
-                Log.w(APP_TAG, response.getStatusLine().toString());
-
-
-                in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                StringBuffer sb = new StringBuffer("");
-                String line = "";
-                String NL = System.getProperty("line.separator");
-                while ((line = in.readLine()) != null) {
-                    sb.append(line + NL);
-                }
-                in.close();
-                return sb.toString();
-
-            } catch (Exception e) {
-                return "Error al conectarse al servidor. Verifique su coneccion a internet" + e.getMessage();
-
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
-        }
+            else {
 
-        protected void onProgressUpdate(Integer... progress) {
-
-            Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
-        }
-
-        protected void onPostExecute(String result) {
-
-            Log.w(APP_TAG,"Resultado obtenido " + result);
-
-
-                 //   Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
-
-         //   Toast.makeText(actividad, result.length(), Toast.LENGTH_SHORT).show();
-          //  Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
                 try {
-                    JSONArray array = new JSONArray(result);
+                    JSONObject array = new JSONObject(result);
 
-                    JSONObject jsonObject = array.getJSONObject(0);
-                    String apellido = jsonObject.getString("apellido");
-                    String nombre = jsonObject.getString("nombre");
-
-
-                    Toast.makeText(actividad, "Validacion Exitosa!", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(actividad, "Bienvenido " + nombre + " " + apellido, Toast.LENGTH_SHORT).show();
-
-                        Intent i = new Intent(actividad, MainActivity.class);
-                        i.putExtra("apellido", apellido);
-                        i.putExtra("nombre", nombre);
-                        startActivity(i);
+                    this.nombre = array.getString("nombre");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    if (numero != "0") {
-                        Toast.makeText(actividad, "Erro:No existe ese numero en nuestra base de datos. Consulte con la central.", Toast.LENGTH_SHORT).show();
-                    }
                 }
+                Log.w("chofer","Nombre obtenido " + nombre);
+                Toast.makeText(actividad, "Bienvenido "+nombre, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(actividad, MainActivity.class);
 
+                i.putExtra("nombre",nombre );
+                startActivity(i);
+            }
 
         }
-
     }
+
 
 }
