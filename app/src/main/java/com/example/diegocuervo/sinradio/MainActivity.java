@@ -46,6 +46,7 @@ public Activity actividad;
     private LocationListener locListener;
     private TextView nombre;
     private String nom;
+    public Integer estado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +70,14 @@ public Activity actividad;
         public String APP_TAG = "SinRadio-Chofer";
         Double latitude;
         Double longitude;
+        Integer estado;
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
+                   estado=Estado_Singleton.getInstance().estado_actual;
                     locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
                     Location loc =
@@ -106,7 +109,7 @@ public Activity actividad;
 
                         jsonObject.put("latitud", latitude);
                     } catch (JSONException e) {
-                        // TODO Auto-generated catch block
+
                         e.printStackTrace();
 
                     }
@@ -114,7 +117,9 @@ public Activity actividad;
                     String baseUrl = "http://sinradio.ddns.net:45507/";
                     new MyHttpPostRequest().execute(baseUrl, data);
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
-
+                    Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+longitude);
+                    Log.w(APP_TAG, "estado actual "+estado);
+                    Toast.makeText(actividad, "estado actual "+estado, Toast.LENGTH_SHORT).show();
                 }
 
         });
@@ -246,15 +251,12 @@ public Activity actividad;
 
     public void btn_estado(View view) {
         Intent i = new Intent(this, Estado.class );
+
         startActivity(i);
     }
 
     public void btn_salir(View view) {
 
-      // System.exit(0);
-        //Intent i = new Intent(this, Gps_ubicacion.class );
-        //startActivity(i);
-       // Toast.makeText(actividad, "Recuerda que al cerrar ", Toast.LENGTH_SHORT).show();
         moveTaskToBack(true);
 
 
@@ -272,9 +274,7 @@ public Activity actividad;
 
     @Override
     public void onBackPressed() {
-       // Toast.makeText(actividad, "cuervo", Toast.LENGTH_SHORT).show();
-        //this.finish();
-        //System.exit(0);
+
         moveTaskToBack(true);
     }
 
