@@ -54,6 +54,8 @@ public Activity actividad;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
         nombre.setText(nom);
