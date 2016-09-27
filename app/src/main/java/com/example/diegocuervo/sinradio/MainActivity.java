@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -71,6 +72,7 @@ public Activity actividad;
         Double latitude;
         Double longitude;
         Integer estado;
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
@@ -107,19 +109,23 @@ public Activity actividad;
 
                     try {
 
-                        jsonObject.put("latitud", latitude);
+                        jsonObject.put("lat", latitude);
+                        jsonObject.put("lon", longitude);
+                        jsonObject.put("estado", estado);
+
                     } catch (JSONException e) {
 
                         e.printStackTrace();
 
                     }
                     String data = jsonObject.toString();
-                    String baseUrl = "http://sinradio.ddns.net:45507/";
+                    String baseUrl = "http://API.SIN-RADIO.COM.AR/posicion/:"+id;
                     new MyHttpPostRequest().execute(baseUrl, data);
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
-                    Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+longitude);
-                    Log.w(APP_TAG, "estado actual "+estado);
-                    Toast.makeText(actividad, "estado actual "+estado, Toast.LENGTH_SHORT).show();
+
+
+                    Toast.makeText(actividad, "longitud "+longitude, Toast.LENGTH_SHORT).show();
+
                 }
 
         });
@@ -183,9 +189,10 @@ public Activity actividad;
                 HttpPost post = new HttpPost(baseUrl);
 
                 //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
-                List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
-                nvp.add(new BasicNameValuePair("evento", "ubicacionGps"));
-                nvp.add(new BasicNameValuePair("estado", obj.getString("latitud")));
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
+                nvp.add(new BasicNameValuePair("lat", obj.getString("lat")));
+                nvp.add(new BasicNameValuePair("lon", obj.getString("lon")));
+                nvp.add(new BasicNameValuePair("estado", obj.getString("estado")));
 
                 // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
