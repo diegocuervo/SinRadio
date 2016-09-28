@@ -55,7 +55,7 @@ public Activity actividad;
         setContentView(R.layout.activity_main);
 
 
-        
+
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
         nombre.setText(nom);
@@ -202,7 +202,12 @@ public Activity actividad;
                 //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
+                int resCode = response.getStatusLine().getStatusCode();
 
+                if(resCode==404 || resCode==410){
+
+                    Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
+                }
                 //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");

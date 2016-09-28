@@ -80,6 +80,12 @@ public class Validacion_inicial extends AppCompatActivity {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet httpRequest = new HttpGet(url);
                 HttpResponse response = httpClient.execute(httpRequest);
+                int resCode = response.getStatusLine().getStatusCode();
+
+                if(resCode==404 || resCode==410){
+
+                    Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
+                }
                 inStream = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
@@ -110,7 +116,7 @@ public class Validacion_inicial extends AppCompatActivity {
         }
 
         protected void onPostExecute(String page)
-        {
+        { Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
 
             if (result.toString().contains("OK")) {
                 Toast.makeText(actividad, "A continuación recibirá un codigo por SMS, igreselo para continuar", Toast.LENGTH_SHORT).show();
@@ -126,9 +132,9 @@ public class Validacion_inicial extends AppCompatActivity {
     }
 
     public class HttpGetDemo extends AsyncTask<Number, Void, String> {
-
+        Integer resCode;
         String nombre;
-        String result = "fail";
+        String result;
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(Number... params) {
@@ -140,10 +146,14 @@ public class Validacion_inicial extends AppCompatActivity {
         {
             String url = "http://API.SIN-RADIO.COM.AR/chofer/"+id;
             BufferedReader inStream = null;
+            Log.w("chofer","Codigo que da " + id);
             try {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet httpRequest = new HttpGet(url);
                 HttpResponse response = httpClient.execute(httpRequest);
+                 resCode = response.getStatusLine().getStatusCode();
+
+
                 inStream = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
@@ -175,7 +185,7 @@ public class Validacion_inicial extends AppCompatActivity {
         protected void onPostExecute(String page)
         {
             Log.w("chofer","Resultado obtenido " + result);
-
+            Log.w("chofer","Codigo que da " + resCode);
             if (result.toString().contains("chofer inexistente")) {
                 Toast.makeText(actividad, "Su cuenta no esta verificada. Ingrese su numero de celular.", Toast.LENGTH_SHORT).show();
 

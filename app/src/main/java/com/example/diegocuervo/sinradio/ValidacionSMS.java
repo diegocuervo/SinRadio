@@ -39,21 +39,37 @@ public class ValidacionSMS extends AppCompatActivity {
     public Activity actividad;
     String sms;
     EditText num_text;
-    Integer numero;
+    String numero;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_sms);
         this.actividad=this;
-        numero= getIntent().getExtras().getInt("numero");
+        numero= getIntent().getExtras().getString("numero");
     }
 
     public void btn_validar(View view) {
 
         num_text = (EditText) findViewById(R.id.editText);
-
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         sms =(String.valueOf(num_text.getText()));
+        JSONObject jsonObject = new JSONObject();
 
-        new HttpGetDemotel().execute(sms,numero.toString());
+
+        try {
+
+            jsonObject.put("tel", numero);
+            jsonObject.put("claveSMS", sms);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+
+
+       String baseUrl= "http://API.SIN-RADIO.COM.AR/chofer/"+id;
+        String data = jsonObject.toString();
+        new HttpGetDemotel().execute(baseUrl, data);
 
 
     }
@@ -61,27 +77,27 @@ public class ValidacionSMS extends AppCompatActivity {
 
         String sms;
         String num;
-        String result = "fail";
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String result;
+
         @Override
         protected String doInBackground(String... params) {
 
-            this.sms = params[0];
-            this.num=params[1];
-            return GetSomething();
-        }
+            String baseUrl = params[0];
+            String jsonData = params[1];
 
-        final String GetSomething()
-        {
 
-            String url = "http://API.SIN-RADIO.COM.AR/chofer/"+id;
+            String url = baseUrl;
             BufferedReader inStream = null;
+
+
             try {
 
-
+                JSONObject obj = new JSONObject(jsonData);
+                Log.w("chofer","mando " +  obj.getString("tel"));
+                Log.w("chofer","mando " +  obj.getString("claveSMS"));
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
-                nvp.add(new BasicNameValuePair("tel", num));
-                nvp.add(new BasicNameValuePair("claveSMS", sms));
+                nvp.add(new BasicNameValuePair("tel", obj.getString("tel")));
+                nvp.add(new BasicNameValuePair("claveSMS", obj.getString("claveSMS")));
 
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPut httpPut = new HttpPut(url);
@@ -116,9 +132,9 @@ public class ValidacionSMS extends AppCompatActivity {
 
         protected void onPostExecute(String page)
         {
-
+            Log.w("chofer","Resultado obtenido en el put " + result);
             if(result.toString().contains(("OK"))){
-                Log.w("chofer","Resultado obtenido en el put " + result);
+
                 Intent i = new Intent(actividad, Validacion_inicial.class);
                 startActivity(i);
 
