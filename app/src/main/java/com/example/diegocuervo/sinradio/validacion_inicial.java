@@ -134,7 +134,7 @@ public class Validacion_inicial extends AppCompatActivity {
     public class HttpGetDemo extends AsyncTask<Number, Void, String> {
         Integer resCode;
         String nombre;
-        String result;
+        String result="fails";
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
         protected String doInBackground(Number... params) {
@@ -184,13 +184,9 @@ public class Validacion_inicial extends AppCompatActivity {
 
         protected void onPostExecute(String page)
         {
-            Log.w("chofer","Resultado obtenido " + result);
+            Log.w("chofer","Resultado obtenido " + result.toString());
             Log.w("chofer","Codigo que da " + resCode);
-            if (result.toString().contains("chofer inexistente")) {
-                Toast.makeText(actividad, "Su cuenta no esta verificada. Ingrese su numero de celular.", Toast.LENGTH_SHORT).show();
-
-            }
-            else {
+            if (resCode.equals(200)) {
 
                 try {
                     JSONObject array = new JSONObject(result);
@@ -206,6 +202,10 @@ public class Validacion_inicial extends AppCompatActivity {
 
                 i.putExtra("nombre",nombre );
                 startActivity(i);
+            }
+            else {
+                Toast.makeText(actividad, "Su cuenta no esta verificada. Ingrese su numero de celular.", Toast.LENGTH_SHORT).show();
+
             }
 
         }
