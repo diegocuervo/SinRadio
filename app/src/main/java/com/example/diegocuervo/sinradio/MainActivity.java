@@ -22,6 +22,8 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -282,6 +284,8 @@ public Activity actividad;
     }
 
     public void btn_emergencia(View view) {
+        Toast.makeText(actividad,FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_SHORT).show();
+        Log.w("asd",FirebaseInstanceId.getInstance().getToken());
         Intent i = new Intent(this, Notificacion.class );
         startActivity(i);
     }

@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -46,6 +48,7 @@ public class Validacion_inicial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_inicial);
         this.actividad=this;
+
         new HttpGetDemo().execute();
     }
 

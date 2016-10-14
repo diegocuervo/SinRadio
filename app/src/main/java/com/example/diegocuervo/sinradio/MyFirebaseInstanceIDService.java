@@ -18,6 +18,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         //Getting registration token
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
+        
         //Displaying token on logcat
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
