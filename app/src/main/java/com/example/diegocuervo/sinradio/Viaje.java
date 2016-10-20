@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -41,23 +42,9 @@ public class Viaje extends AppCompatActivity {
         setContentView(R.layout.viajes);
         this.actividad=this;
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        JSONObject jsonObject= new JSONObject();
 
-
-        try {
-
-
-            jsonObject.put("id_android",id );
-        }
-
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
-        String data =  jsonObject.toString();
-        String baseUrl = "http://sinradio.ddns.net:45507/";
-        new MyHttpPostRequest().execute(baseUrl, data);
+        String baseUrl = "http://api.sin-radio.com.ar/chofer/"+id+"/viajes";
+        new MyHttpGetRequest().execute(baseUrl);
 
 
 
@@ -68,34 +55,23 @@ public class Viaje extends AppCompatActivity {
 
 
 
-private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
+private class MyHttpGetRequest extends AsyncTask<String, Integer, String> {
 
     private String APP_TAG= "SinRadio-appChofer";
     protected String doInBackground(String... params) {
         BufferedReader in = null;
         String baseUrl = params[0];
-        String jsonData = params[1];
 
         try {
-            JSONObject obj = new JSONObject(jsonData);
-            //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
+
+
             HttpClient httpClient = new DefaultHttpClient();
-            //Creamos objeto para armar peticion de tipo HTTP POST
-            HttpPost post = new HttpPost(baseUrl);
 
-            //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
-            List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
-            nvp.add(new BasicNameValuePair("evento", "pedirViajes"));
-            nvp.add(new BasicNameValuePair("id_android", obj.getString("id_android")));
+            HttpGet get = new HttpGet(baseUrl);
 
-            // post.setHeader("Content-type", "application/json");
-            post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
-
-            //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
-            HttpResponse response = httpClient.execute(post);
+            HttpResponse response = httpClient.execute(get);
             Log.w(APP_TAG, response.getStatusLine().toString());
 
-            //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer sb = new StringBuffer("");
             String line = "";
@@ -120,34 +96,34 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
     }
 
     protected void onProgressUpdate(Integer... progress) {
-        //Se obtiene el progreso de la peticion
+
         Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
     }
 
     protected void onPostExecute(String result) {
-        //Se obtiene el resultado de la peticion Asincrona
+
+
+
         try {
             JSONArray array = new JSONArray(result);
             Integer cantidad = array.length();
             Integer k=0;
             Tabla tabla = new Tabla(actividad, (TableLayout) findViewById(R.id.tabla));
             tabla.agregarCabecera(R.array.cabecera_tabla);
+            Log.w(APP_TAG, "Resultado obtenido " + result + cantidad);
             while(k<cantidad){
             JSONObject jsonObject = array.getJSONObject(k);
 
 
-            //   Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            // Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
 
-            Log.w(APP_TAG, "Resultado obtenido " + result);
 
 
                 ArrayList<String> elementos = new ArrayList<String>();
 
                 elementos.add(jsonObject.getString("id"));
-                elementos.add(jsonObject.getString("id_cliente"));
-                elementos.add(jsonObject.getString("origen"));
-                elementos.add(jsonObject.getString("destino"));
+                elementos.add(jsonObject.getString("lat"));
+                elementos.add(jsonObject.getString("lon"));
+                elementos.add(jsonObject.getString("dir"));
                 elementos.add(jsonObject.getString("monto"));
                 tabla.agregarFilaTabla(elementos);
                 k++;
@@ -155,29 +131,10 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
             }
         }
             catch (JSONException e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
 
             }
-
-
-       /* try {
-            JSONArray array = new JSONArray(result);
-
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }*/
-
-        Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
-
 
     }
 

@@ -26,6 +26,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -107,7 +108,7 @@ public class Tabla{
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GRAY);
                 System.out.println("Row clicked: " + v.getId());
-                 TextView destino = (TextView)fila.getChildAt(3);
+                 TextView destino = (TextView)fila.getChildAt(0);
                 String destino_viaje= destino.getText().toString();
 
                 showInputDialog(v.getId(),destino_viaje);
@@ -160,7 +161,7 @@ public class Tabla{
 
         final TextView textView = (TextView) promptView.findViewById(R.id.textView);
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
-        textView.setText("Ingrese el Monto para el viaje con ID "+id_fila+" con destino "+destino);
+        textView.setText("Ingrese el Monto para el viaje con ID "+destino);
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -174,9 +175,9 @@ public class Tabla{
 
 
                         try {
-                            jsonObject.put("id_viaje", destino);
+                            jsonObject.put("android_id", destino);
                             jsonObject.put("monto", strJson);
-                         jsonObject.put("evento", "ingresoMonto");
+
                         }
 
                         catch (JSONException e) {
@@ -186,10 +187,10 @@ public class Tabla{
                         }
                         String data =  jsonObject.toString();
 
-                        //Se define la URL del servidor a la cual se enviarán lso datos
-                        String baseUrl = "http://sinradio.ddns.net:45507/";
 
-                        new MyHttpPostRequest().execute(baseUrl, data);
+                        String baseUrl = "http://api.sin-radio.com.ar/viajes/:"+destino;
+
+                        new MyHttpPutRequest().execute(baseUrl, data);
 
 
                     }
@@ -201,7 +202,7 @@ public class Tabla{
                             }
                         });
 
-        // create an alert dialog
+
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
@@ -211,7 +212,7 @@ public class Tabla{
 
 
 
-private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
+private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
 
     public String APP_TAG = "ECTUploadData";
     protected String doInBackground(String... params) {
@@ -220,25 +221,25 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
         String jsonData = params[1];
 
         try {
-            //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
+            JSONObject obj = new JSONObject(jsonData);
             HttpClient httpClient = new DefaultHttpClient();
-            //Creamos objeto para armar peticion de tipo HTTP POST
-            HttpPost post = new HttpPost(baseUrl);
 
-            //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
-           List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
-            nvp.add(new BasicNameValuePair("evento", "ingresomonto"));
-            nvp.add(new BasicNameValuePair("monto", "456.52"));
-            nvp.add(new BasicNameValuePair("id_viaje","4353" ));
+            HttpPut put = new HttpPut(baseUrl);
 
-           // post.setHeader("Content-type", "application/json");
-            post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
-            //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
-            HttpResponse response = httpClient.execute(post);
+           List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
+
+            nvp.add(new BasicNameValuePair("android_id",obj.getString("android_id")));
+            nvp.add(new BasicNameValuePair("monto", obj.getString("monto")));
+
+
+            put.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
+
+
+            HttpResponse response = httpClient.execute(put);
             Log.w(APP_TAG, response.getStatusLine().toString());
 
-            //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer sb = new StringBuffer("");
             String line = "";
@@ -263,27 +264,13 @@ private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
     }
 
     protected void onProgressUpdate(Integer... progress) {
-        //Se obtiene el progreso de la peticion
+
         Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
     }
 
     protected void onPostExecute(String result) {
-        //Se obtiene el resultado de la peticion Asincrona
+
         Log.w(APP_TAG,"Resultado obtenido " + result);
-        try {
-           JSONArray array = new JSONArray(result);
-
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
 
        Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
 

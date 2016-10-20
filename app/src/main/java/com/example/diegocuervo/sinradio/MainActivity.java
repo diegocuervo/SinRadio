@@ -66,7 +66,7 @@ public Activity actividad;
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
-        timer.scheduleAtFixedRate(enviarPos,0,5000);
+        timer.scheduleAtFixedRate(enviarPos,50000,50000);
 
 
     }
