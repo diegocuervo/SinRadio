@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.util.Log;
@@ -64,6 +65,7 @@ public class Tabla{
 
 
     public void agregarCabecera(int recursocabecera) {
+
         TableRow.LayoutParams layoutCelda;
         TableRow fila = new TableRow(actividad);
         TableRow.LayoutParams layoutFila = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -175,7 +177,7 @@ public class Tabla{
 
 
                         try {
-                            jsonObject.put("android_id", destino);
+                            jsonObject.put("android_id", Estado_Singleton.getInstance().android_id);
                             jsonObject.put("monto", strJson);
 
                         }
@@ -188,14 +190,14 @@ public class Tabla{
                         String data =  jsonObject.toString();
 
 
-                        String baseUrl = "http://api.sin-radio.com.ar/viajes/:"+destino;
+                        String baseUrl = "http://api.sin-radio.com.ar/viaje/"+destino;
 
                         new MyHttpPutRequest().execute(baseUrl, data);
 
 
                     }
                 })
-                .setNegativeButton("Cancel",
+                .setNegativeButton("Cancelar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -219,6 +221,7 @@ private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
         BufferedReader in = null;
         String baseUrl = params[0];
         String jsonData = params[1];
+        Log.w(APP_TAG,jsonData);
 
         try {
             JSONObject obj = new JSONObject(jsonData);
@@ -232,7 +235,8 @@ private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
             nvp.add(new BasicNameValuePair("android_id",obj.getString("android_id")));
             nvp.add(new BasicNameValuePair("monto", obj.getString("monto")));
 
-
+            Log.w(APP_TAG, obj.getString("android_id"));
+            Log.w(APP_TAG, obj.getString("monto"));
             put.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
 
@@ -273,7 +277,7 @@ private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
         Log.w(APP_TAG,"Resultado obtenido " + result);
 
        Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
-
+actividad.onBackPressed();
 
     }
 

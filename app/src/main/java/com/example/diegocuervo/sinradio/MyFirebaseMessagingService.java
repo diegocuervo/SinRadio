@@ -25,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
+import java.util.Map;
 import java.util.TimerTask;
 
 /**
@@ -33,34 +34,46 @@ import java.util.TimerTask;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-    private String cuerpo;
+    private Map<String, String> cuerpo;
     private String from;
+    private String titulo;
     private RemoteMessage remoteMensage;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         remoteMensage = remoteMessage;
-        cuerpo = remoteMessage.getFrom();
-        from = remoteMessage.getNotification().getBody();
-        sendNotification(remoteMessage.getNotification().getBody());
+        from = remoteMessage.getFrom();
+        cuerpo = remoteMessage.getData();
+        titulo = remoteMessage.getNotification().getTitle();
+
+       String id_viaje= cuerpo.get("idViaje");
+        Log.w("cuerpo noti", id_viaje);
+        sendNotification(id_viaje,titulo);
 
     }
-        private void sendNotification(String messageBody) {
+        private void sendNotification(String id_viaje,String titulo) {
             int notificationID = 1;
-            Intent i = new Intent(this, NotificationView.class);
+            Log.w("cuerpo noti", id_viaje);
+            Intent i = new Intent(this, BroadcastNotificacionAcept.class);
             i.putExtra("notificationID", notificationID);
+            i.putExtra("id_vi",id_viaje );
+            Intent c = new Intent(this, BroadcastNotificacionCancel.class);
+            c.putExtra("notificationID", notificationID);
+
+            PendingIntent aceptIntent = PendingIntent.getBroadcast(this, 0,  i , 0);
+            PendingIntent cancelIntent = PendingIntent.getBroadcast(this, 0,  c , 0);
             long[] pattern = new long[]{1000,2000,2000};
 
             Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             PendingIntent deleteIntent = PendingIntent.getActivity(this, 0, i, 0);
-            PendingIntent shareIntent = PendingIntent.getActivity(this, 0, i, 0);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
+
+
             NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-            CharSequence ticker ="Tienes un Potencial Viaje Cerca!";
-            CharSequence contentTitle = "Tienes un Potencial Viaje Cerca!";
+            CharSequence ticker ="Nuevo Viaje:"+titulo;
+            CharSequence contentTitle = "Nuevo Viaje:"+titulo;
             CharSequence contentText = "aca iria la ubicacion del viaje nuevo";
             Notification noti = new android.support.v7.app.NotificationCompat.Builder(this)
-                    .setContentIntent(pendingIntent)
+
                     .setTicker(ticker)
                     .setContentTitle(contentTitle)
                     .setContentText(contentText)
@@ -69,8 +82,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .getDrawable(R.drawable.iconotaxi)).getBitmap()))
                     //  .addAction(R.drawable.taxi, ticker, pendingIntent)
 
-                    .addAction(android.R.drawable.ic_menu_send, "Aceptar", deleteIntent)
-                    .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", shareIntent)
+                    .addAction(android.R.drawable.ic_menu_send, "Aceptar", aceptIntent)
+                    .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", cancelIntent)
                     .setSound(defaultSound)
                     .setLights(Color.BLUE, 1, 0)
                     .setVibrate(pattern)

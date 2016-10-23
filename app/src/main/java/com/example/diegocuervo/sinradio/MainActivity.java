@@ -57,16 +57,27 @@ public Activity actividad;
         setContentView(R.layout.activity_main);
 
 
-
+        Estado_Singleton.getInstance().android_id=Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
         nombre.setText(nom);
 
         this.actividad=this;
+
+
+
+
+        String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/token/"+Estado_Singleton.getInstance().android_id;
+        new MyHttpPostRequestToken().execute(baseUrl);
+
+
+
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
         timer.scheduleAtFixedRate(enviarPos,50000,50000);
+
+
 
 
     }
@@ -123,7 +134,7 @@ public Activity actividad;
 
                     }
                     String data = jsonObject.toString();
-                    String baseUrl = "http://API.SIN-RADIO.COM.AR/posicion/:"+id;
+                    String baseUrl = "http://API.SIN-RADIO.COM.AR/posicion/"+id;
                     new MyHttpPostRequest().execute(baseUrl, data);
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
 
@@ -294,6 +305,96 @@ public Activity actividad;
     public void onBackPressed() {
 
         moveTaskToBack(true);
+
     }
+
+    private class MyHttpPostRequestToken extends AsyncTask<String, Integer, String> {
+
+        public String APP_TAG = "token_envio";
+        protected String doInBackground(String... params) {
+            BufferedReader in = null;
+            String baseUrl = params[0];
+
+
+
+
+            try {
+                JSONObject token_json = new JSONObject(FirebaseInstanceId.getInstance().getToken());
+                //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
+                HttpClient httpClient = new DefaultHttpClient();
+                //Creamos objeto para armar peticion de tipo HTTP POST
+                HttpPost post = new HttpPost(baseUrl);
+
+                //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
+                nvp.add(new BasicNameValuePair("token",token_json.getString("token")));
+                Log.w(APP_TAG, token_json.getString("token"));
+
+                // post.setHeader("Content-type", "application/json");
+                post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
+
+                //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
+                HttpResponse response = httpClient.execute(post);
+                Log.w(APP_TAG, response.getStatusLine().toString());
+                int resCode = response.getStatusLine().getStatusCode();
+
+                if(resCode==404 || resCode==410){
+
+                    Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
+                }
+                //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+                in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                String NL = System.getProperty("line.separator");
+                while ((line = in.readLine()) != null) {
+                    sb.append(line + NL);
+                }
+                in.close();
+                return sb.toString();
+
+            } catch (Exception e) {
+                return "Comienze a moverse para reportar posicion" + e.getMessage();
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            //Se obtiene el progreso de la peticion
+            Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
+        }
+
+        protected void onPostExecute(String result) {
+            //Se obtiene el resultado de la peticion Asincrona
+            Log.w(APP_TAG,"Resultado obtenido " + result);
+       /* try {
+            JSONArray array = new JSONArray(result);
+
+            JSONObject jsonObject = array.getJSONObject(0);
+
+
+            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
+            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
+        }
+        catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }*/
+
+            Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
+
+
+        }
+
+    }
+
 
 }

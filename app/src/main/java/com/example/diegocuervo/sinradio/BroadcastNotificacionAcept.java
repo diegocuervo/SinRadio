@@ -1,17 +1,12 @@
 package com.example.diegocuervo.sinradio;
 
-import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,25 +23,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Diego Cuervo on 07/08/2016.
+ * Created by Diego Cuervo on 23/10/16.
  */
-public class NotificationView  extends AppCompatActivity {
-    public Activity actividad;
+public class BroadcastNotificacionAcept extends BroadcastReceiver {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-       // setContentView(R.layout.notification);
+    public void onReceive(Context context, Intent intent) {
+        Bundle answerBundle = intent.getExtras();
+        String id_viaje = answerBundle.getString("id_vi");
+        int notificationID = answerBundle.getInt("notificationID");
+        String  s = Context.NOTIFICATION_SERVICE;
+        NotificationManager mNM = (NotificationManager) context.getSystemService(s);
+        mNM.cancel(notificationID);
 
-       NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        nm.cancel(getIntent().getExtras().getInt("notificationID"));
-        String id_viaje = String.valueOf(getIntent().getExtras().getString("id_vi"));
+        Log.w("agarro parametro", id_viaje);
 
-        Log.w("agarro parametro", String.valueOf(getIntent().getExtras().getString("id_vi")));
 
-                String baseUrl = "http://API.SIN-RADIO.COM.AR/viaje/"+String.valueOf(getIntent().getExtras().getString("id_vi"));
-                new MyHttpPostRequestAceptaViaje().execute(baseUrl);
-
+        String baseUrl = "http://API.SIN-RADIO.COM.AR/viaje/"+id_viaje;
+        new MyHttpPostRequestAceptaViaje().execute(baseUrl);
     }
 
     private class MyHttpPostRequestAceptaViaje extends AsyncTask<String, Integer, String> {
@@ -81,7 +74,7 @@ public class NotificationView  extends AppCompatActivity {
 
                 if(resCode==404 || resCode==410){
 
-                  //  Toast.makeText(getApplicationContext(), "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(getApplicationContext(), "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
                 }
                 //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -114,27 +107,11 @@ public class NotificationView  extends AppCompatActivity {
 
         protected void onPostExecute(String result) {
             //Se obtiene el resultado de la peticion Asincrona
-           Log.w(APP_TAG,"Resultado obtenido " + result);
-       /* try {
-            JSONArray array = new JSONArray(result);
+            Log.w(APP_TAG,"Resultado obtenido " + result);
 
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }*/
-
-           // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 
 
         }
 
     }
-
 }
