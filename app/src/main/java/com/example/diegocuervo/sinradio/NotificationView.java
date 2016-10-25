@@ -34,9 +34,7 @@ public class NotificationView  extends AppCompatActivity {
     public Activity actividad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.notification);
 
        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.cancel(getIntent().getExtras().getInt("notificationID"));
@@ -61,20 +59,16 @@ public class NotificationView  extends AppCompatActivity {
 
             try {
 
-                //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
                 HttpClient httpClient = new DefaultHttpClient();
-                //Creamos objeto para armar peticion de tipo HTTP POST
+
                 HttpPost post = new HttpPost(baseUrl);
 
-                //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
                 nvp.add(new BasicNameValuePair("android_id",  Estado_Singleton.getInstance().android_id));
 
 
-                // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
-                //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
                 int resCode = response.getStatusLine().getStatusCode();
@@ -83,7 +77,7 @@ public class NotificationView  extends AppCompatActivity {
 
                   //  Toast.makeText(getApplicationContext(), "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
                 }
-                //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -108,29 +102,12 @@ public class NotificationView  extends AppCompatActivity {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            //Se obtiene el progreso de la peticion
             Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
         }
 
         protected void onPostExecute(String result) {
-            //Se obtiene el resultado de la peticion Asincrona
+
            Log.w(APP_TAG,"Resultado obtenido " + result);
-       /* try {
-            JSONArray array = new JSONArray(result);
-
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }*/
-
-           // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 
 
         }

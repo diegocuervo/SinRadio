@@ -56,7 +56,6 @@ public Activity actividad;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Estado_Singleton.getInstance().android_id=Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
@@ -64,22 +63,13 @@ public Activity actividad;
 
         this.actividad=this;
 
-
-
-
         String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/token/"+Estado_Singleton.getInstance().android_id;
         new MyHttpPostRequestToken().execute(baseUrl);
-
-
 
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
         timer.scheduleAtFixedRate(enviarPos,50000,50000);
-
-
-
-
     }
 
     class EnviarPosicion extends TimerTask {
@@ -157,7 +147,7 @@ public Activity actividad;
                 Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
                 Log.e("test", "location send");
 
-               // locManager.removeUpdates(locationListener);
+
 
 
                 latLongString = "Lat:" + latitude + "\nLong:" + longitude;
@@ -169,22 +159,6 @@ public Activity actividad;
         }
 
     }
-
-    /*private final LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            updateWithNewLocation(location);
-        }
-
-        public void onProviderDisabled(String provider) {
-            updateWithNewLocation(null);
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    };*/
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
 
@@ -198,21 +172,18 @@ public Activity actividad;
 
             try {
                 JSONObject obj = new JSONObject(jsonData);
-                //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
+
                 HttpClient httpClient = new DefaultHttpClient();
-                //Creamos objeto para armar peticion de tipo HTTP POST
+
                 HttpPost post = new HttpPost(baseUrl);
 
-                //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
                 nvp.add(new BasicNameValuePair("lat", obj.getString("lat")));
                 nvp.add(new BasicNameValuePair("lon", obj.getString("lon")));
                 nvp.add(new BasicNameValuePair("estado", obj.getString("estado")));
 
-                // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
-                //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
                 int resCode = response.getStatusLine().getStatusCode();
@@ -221,7 +192,7 @@ public Activity actividad;
 
                     Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
                 }
-                //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -246,27 +217,14 @@ public Activity actividad;
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            //Se obtiene el progreso de la peticion
+
             Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
         }
 
         protected void onPostExecute(String result) {
-            //Se obtiene el resultado de la peticion Asincrona
+
             Log.w(APP_TAG,"Resultado obtenido " + result);
-       /* try {
-            JSONArray array = new JSONArray(result);
 
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }*/
 
             Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
 
@@ -315,25 +273,18 @@ public Activity actividad;
             BufferedReader in = null;
             String baseUrl = params[0];
 
-
-
-
             try {
-                JSONObject token_json = new JSONObject(FirebaseInstanceId.getInstance().getToken());
-                //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
+
                 HttpClient httpClient = new DefaultHttpClient();
-                //Creamos objeto para armar peticion de tipo HTTP POST
+
                 HttpPost post = new HttpPost(baseUrl);
 
-                //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
-                nvp.add(new BasicNameValuePair("token",token_json.getString("token")));
-                Log.w(APP_TAG, token_json.getString("token"));
+                nvp.add(new BasicNameValuePair("token",FirebaseInstanceId.getInstance().getToken()));
+                Log.w(APP_TAG, FirebaseInstanceId.getInstance().getToken());
 
-                // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
-                //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
                 int resCode = response.getStatusLine().getStatusCode();
@@ -342,7 +293,7 @@ public Activity actividad;
 
                     Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
                 }
-                //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -367,28 +318,11 @@ public Activity actividad;
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            //Se obtiene el progreso de la peticion
             Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
         }
 
         protected void onPostExecute(String result) {
-            //Se obtiene el resultado de la peticion Asincrona
             Log.w(APP_TAG,"Resultado obtenido " + result);
-       /* try {
-            JSONArray array = new JSONArray(result);
-
-            JSONObject jsonObject = array.getJSONObject(0);
-
-
-            Log.w(APP_TAG,"Anduvo el parseo puto? " + jsonObject.getString("apellido"));
-            Toast.makeText(actividad, jsonObject.getString("apellido"), Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }*/
-
             Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
 
 

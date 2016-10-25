@@ -188,7 +188,6 @@ public class Validacion_inicial extends AppCompatActivity {
         protected void onPostExecute(String page)
         {
             Log.w("chofer","Resultado obtenido " + result.toString());
-            Log.w("chofer","Codigo que da " + resCode);
             if (resCode.equals(200)) {
 
                 try {
@@ -199,7 +198,6 @@ public class Validacion_inicial extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.w("chofer","Nombre obtenido " + nombre);
                 Toast.makeText(actividad, "Bienvenido "+nombre, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(actividad, MainActivity.class);
 

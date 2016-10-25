@@ -92,11 +92,6 @@ public class Tabla{
         FILAS++;
     }
 
-    /**
-     * Agrega una fila a la tabla
-     *
-     * @param elementos Elementos de la fila
-     */
     public void agregarFilaTabla(ArrayList<String> elementos) {
         TableRow.LayoutParams layoutCelda;
         TableRow.LayoutParams layoutFila = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -154,7 +149,7 @@ public class Tabla{
 
     protected void showInputDialog(final int id_fila,final String destino) {
 
-        // get prompts.xml view
+
 
         LayoutInflater layoutInflater = LayoutInflater.from(actividad);
         View promptView = layoutInflater.inflate(R.layout.monto, null);
@@ -164,13 +159,13 @@ public class Tabla{
         final TextView textView = (TextView) promptView.findViewById(R.id.textView);
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
         textView.setText("Ingrese el Monto para el viaje con ID "+destino);
-        // setup a dialog window
+
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                                 Toast.makeText(actividad, "El Monto ingresado es " + editText.getText(), Toast.LENGTH_LONG).show();
-                            //Aca le aviso a la API central el monto del viaje, le mando el monto recien cargado y el ID viaje.
+
 
                         String strJson =(editText.getText().toString());
                         JSONObject jsonObject= new JSONObject();

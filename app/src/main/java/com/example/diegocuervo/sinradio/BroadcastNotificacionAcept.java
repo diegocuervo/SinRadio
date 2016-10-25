@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,16 +27,17 @@ import java.util.List;
  * Created by Diego Cuervo on 23/10/16.
  */
 public class BroadcastNotificacionAcept extends BroadcastReceiver {
-    @Override
+    Context contexto;
     public void onReceive(Context context, Intent intent) {
         Bundle answerBundle = intent.getExtras();
-        String id_viaje = answerBundle.getString("id_vi");
         int notificationID = answerBundle.getInt("notificationID");
         String  s = Context.NOTIFICATION_SERVICE;
         NotificationManager mNM = (NotificationManager) context.getSystemService(s);
         mNM.cancel(notificationID);
+        String id_viaje = answerBundle.getString("id_vi");
+    this.contexto=context;
 
-        Log.w("agarro parametro", id_viaje);
+        Log.w("agarro parametro", answerBundle.getString("id_vi"));
 
 
         String baseUrl = "http://API.SIN-RADIO.COM.AR/viaje/"+id_viaje;
@@ -54,12 +56,10 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
 
             try {
 
-                //Creamos un objeto Cliente HTTP para manejar la peticion al servidor
                 HttpClient httpClient = new DefaultHttpClient();
-                //Creamos objeto para armar peticion de tipo HTTP POST
+
                 HttpPost post = new HttpPost(baseUrl);
 
-                //Configuramos los parametos que vaos a enviar con la peticion HTTP POST
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
                 nvp.add(new BasicNameValuePair("android_id",  Estado_Singleton.getInstance().android_id));
 
@@ -67,7 +67,6 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
                 // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
-                //Se ejecuta el envio de la peticion y se espera la respuesta de la misma.
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
                 int resCode = response.getStatusLine().getStatusCode();
@@ -76,7 +75,7 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
 
                     //  Toast.makeText(getApplicationContext(), "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
                 }
-                //Obtengo el contenido de la respuesta en formato InputStream Buffer y la paso a formato String
+
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -101,14 +100,13 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            //Se obtiene el progreso de la peticion
+
             Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
         }
 
         protected void onPostExecute(String result) {
-            //Se obtiene el resultado de la peticion Asincrona
             Log.w(APP_TAG,"Resultado obtenido " + result);
-
+            Toast.makeText(contexto, result, Toast.LENGTH_SHORT).show();
 
 
         }

@@ -58,8 +58,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             i.putExtra("id_vi",id_viaje );
             Intent c = new Intent(this, BroadcastNotificacionCancel.class);
             c.putExtra("notificationID", notificationID);
-
-            PendingIntent aceptIntent = PendingIntent.getBroadcast(this, 0,  i , 0);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent aceptIntent = PendingIntent.getBroadcast(this, 0,  i , PendingIntent.FLAG_UPDATE_CURRENT);
             PendingIntent cancelIntent = PendingIntent.getBroadcast(this, 0,  c , 0);
             long[] pattern = new long[]{1000,2000,2000};
 
