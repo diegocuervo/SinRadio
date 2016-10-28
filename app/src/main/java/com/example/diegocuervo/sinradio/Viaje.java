@@ -83,7 +83,7 @@ private class MyHttpGetRequest extends AsyncTask<String, Integer, String> {
             return sb.toString();
 
         } catch (Exception e) {
-            return "Exception happened: " + e.getMessage();
+            return "ERROR: Verifique su coneccion a internet";
         } finally {
             if (in != null) {
                 try {
@@ -131,7 +131,7 @@ private class MyHttpGetRequest extends AsyncTask<String, Integer, String> {
             }
         }
             catch (JSONException e) {
-
+                Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
 
             }

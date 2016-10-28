@@ -105,10 +105,12 @@ public class Tabla{
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GRAY);
                 System.out.println("Row clicked: " + v.getId());
-                 TextView destino = (TextView)fila.getChildAt(0);
+                 TextView destino = (TextView)fila.getChildAt(3);
+                TextView id = (TextView)fila.getChildAt(0);
+                String id_viaje= id.getText().toString();
                 String destino_viaje= destino.getText().toString();
 
-                showInputDialog(v.getId(),destino_viaje);
+                showInputDialog(id_viaje,destino_viaje);
 
 
             }
@@ -147,7 +149,7 @@ public class Tabla{
     }
 
 
-    protected void showInputDialog(final int id_fila,final String destino) {
+    protected void showInputDialog(final String id_fila,final String destino) {
 
 
 
@@ -158,13 +160,13 @@ public class Tabla{
 
         final TextView textView = (TextView) promptView.findViewById(R.id.textView);
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
-        textView.setText("Ingrese el Monto para el viaje con ID "+destino);
+        textView.setText("Ingrese el Monto para el viaje con destino a "+destino);
 
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                                Toast.makeText(actividad, "El Monto ingresado es " + editText.getText(), Toast.LENGTH_LONG).show();
+
 
 
                         String strJson =(editText.getText().toString());
@@ -185,7 +187,7 @@ public class Tabla{
                         String data =  jsonObject.toString();
 
 
-                        String baseUrl = "http://api.sin-radio.com.ar/viaje/"+destino;
+                        String baseUrl = "http://api.sin-radio.com.ar/viaje/"+id_fila;
 
                         new MyHttpPutRequest().execute(baseUrl, data);
 
@@ -247,10 +249,10 @@ private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
                 sb.append(line + NL);
             }
             in.close();
-            return sb.toString();
+            return "Monto cargado con exito";
 
         } catch (Exception e) {
-            return "Exception happened: " + e.getMessage();
+            return "ERROR:Verifique su coneccion a internet";
         } finally {
             if (in != null) {
                 try {

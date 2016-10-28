@@ -2,7 +2,7 @@
     <string name="app_name">SinRadio</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="texto">Listado de Viajes del Dia</string>
+    <string name="texto">Listado de Viajes Realizados</string>
     <string name="posicion_actual">Posición Actual:</string>
     <string name="activar">Activar</string>
     <string name="desactivar">Desactivar</string>
