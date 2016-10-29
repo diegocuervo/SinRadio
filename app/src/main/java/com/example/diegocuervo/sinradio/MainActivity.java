@@ -49,7 +49,7 @@ public Activity actividad;
     private LocationListener locListener;
     private TextView nombre;
     private String nom;
-    public Integer estado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public Activity actividad;
         timer = new Timer();
         EnviarPosicion enviarPos = new EnviarPosicion();
 
-        timer.scheduleAtFixedRate(enviarPos,50000,50000);
+        timer.scheduleAtFixedRate(enviarPos,5000,5000);
     }
 
     class EnviarPosicion extends TimerTask {
@@ -129,7 +129,7 @@ public Activity actividad;
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
 
 
-                    Toast.makeText(actividad, "longitud "+longitude, Toast.LENGTH_SHORT).show();
+
 
                 }
 
@@ -161,7 +161,7 @@ public Activity actividad;
     }
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
-
+        Integer resCode =1;
         public String APP_TAG = "AppChofer";
         protected String doInBackground(String... params) {
             BufferedReader in = null;
@@ -186,12 +186,8 @@ public Activity actividad;
 
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
-                int resCode = response.getStatusLine().getStatusCode();
+                resCode = response.getStatusLine().getStatusCode();
 
-                if(resCode==404 || resCode==410){
-
-                    Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
-                }
 
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
@@ -204,8 +200,8 @@ public Activity actividad;
                 return sb.toString();
 
             } catch (Exception e) {
-                return "Comienze a moverse para reportar posicion" + e.getMessage();
-            } finally {
+                    return "Comienze a moverse para reportar posicion";
+            }finally {
                 if (in != null) {
                     try {
                         in.close();
@@ -223,11 +219,15 @@ public Activity actividad;
 
         protected void onPostExecute(String result) {
 
-            Log.w(APP_TAG,"Resultado obtenido " + result);
+            Log.w(APP_TAG,resCode.toString());
+            if(resCode.equals(1)) {
 
+                Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
+            }
 
-            Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
-
+            if(resCode.equals(200)) {
+                Toast.makeText(actividad, "Reportando Posicion.", Toast.LENGTH_SHORT).show();
+            }
 
         }
 
@@ -253,10 +253,7 @@ public Activity actividad;
     }
 
     public void btn_emergencia(View view) {
-        Toast.makeText(actividad,FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_SHORT).show();
-        Log.w("asd",FirebaseInstanceId.getInstance().getToken());
-        Intent i = new Intent(this, Notificacion.class );
-        startActivity(i);
+
     }
 
     @Override
@@ -269,6 +266,8 @@ public Activity actividad;
     private class MyHttpPostRequestToken extends AsyncTask<String, Integer, String> {
 
         public String APP_TAG = "token_envio";
+        Integer resCode = 1;
+
         protected String doInBackground(String... params) {
             BufferedReader in = null;
             String baseUrl = params[0];
@@ -280,19 +279,15 @@ public Activity actividad;
                 HttpPost post = new HttpPost(baseUrl);
 
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
-                nvp.add(new BasicNameValuePair("token",FirebaseInstanceId.getInstance().getToken()));
+                nvp.add(new BasicNameValuePair("token", FirebaseInstanceId.getInstance().getToken()));
                 Log.w(APP_TAG, FirebaseInstanceId.getInstance().getToken());
 
-                post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
+                post.setEntity(new UrlEncodedFormEntity(nvp, "UTF-8"));
 
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
-                int resCode = response.getStatusLine().getStatusCode();
+                resCode = response.getStatusLine().getStatusCode();
 
-                if(resCode==404 || resCode==410){
-
-                    Toast.makeText(actividad, "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
-                }
 
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");
@@ -305,7 +300,7 @@ public Activity actividad;
                 return sb.toString();
 
             } catch (Exception e) {
-                return "Comienze a moverse para reportar posicion" + e.getMessage();
+                return "ERROR:Verifique su coneccion a internet.";
             } finally {
                 if (in != null) {
                     try {
@@ -317,18 +312,25 @@ public Activity actividad;
             }
         }
 
+
         protected void onProgressUpdate(Integer... progress) {
             Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
         }
 
         protected void onPostExecute(String result) {
             Log.w(APP_TAG,"Resultado obtenido " + result);
-            Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
 
+            if(resCode!=1){
+
+            }
+            else{
+                Toast.makeText(actividad,"ERROR:Verifique su coneccion a internet.", Toast.LENGTH_SHORT).show();
+            }
 
         }
 
     }
-
-
 }
+
+
+

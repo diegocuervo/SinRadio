@@ -75,8 +75,7 @@ public class ValidacionSMS extends AppCompatActivity {
     }
     public class HttpGetDemotel extends AsyncTask<String, Void, String> {
 
-        String sms;
-        String num;
+        Integer resCode=1;
         String result;
 
         @Override
@@ -103,7 +102,7 @@ public class ValidacionSMS extends AppCompatActivity {
                 HttpPut httpPut = new HttpPut(url);
                 httpPut.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
                 HttpResponse response = httpClient.execute(httpPut);
-
+                resCode = response.getStatusLine().getStatusCode();
                 inStream = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
@@ -117,6 +116,7 @@ public class ValidacionSMS extends AppCompatActivity {
                 inStream.close();
                 result = buffer.toString();
             } catch (Exception e) {
+                result="ERROR:Verifique su coneccion a internet.";
                 e.printStackTrace();
             } finally {
                 if (inStream != null) {
@@ -133,15 +133,19 @@ public class ValidacionSMS extends AppCompatActivity {
         protected void onPostExecute(String page)
         {
             Log.w("chofer","Resultado obtenido en el put " + result);
-            if(result.toString().contains(("OK"))){
+            if(resCode!=1) {
 
-                Intent i = new Intent(actividad, Validacion_inicial.class);
-                startActivity(i);
+                if (resCode.equals(200)) {
 
-                Toast.makeText(actividad, result.toString(), Toast.LENGTH_SHORT).show();
-            }
-     else{
-                Toast.makeText(actividad, "El Codigo ingresado no es correcto.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(actividad, Validacion_inicial.class);
+                    startActivity(i);
+
+
+                } else {
+                    Toast.makeText(actividad, "El codigo ingresado no es correcto.", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
             }
         }
     }
