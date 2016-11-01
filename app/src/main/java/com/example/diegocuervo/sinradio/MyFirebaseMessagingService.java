@@ -40,14 +40,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private RemoteMessage remoteMensage;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        remoteMensage = remoteMessage;
-        from = remoteMessage.getFrom();
-        cuerpo = remoteMessage.getData();
-        titulo = remoteMessage.getNotification().getTitle();
 
+
+        cuerpo = remoteMessage.getData();
+
+        Log.w("probando noti", "entro a onmessagereceived"+cuerpo.get("dir"));
        String id_viaje= cuerpo.get("idViaje");
-        Log.w("cuerpo noti", id_viaje);
-        sendNotification(id_viaje,titulo);
+        String titulo= cuerpo.get("body");
+
+       sendNotification(id_viaje,titulo);
 
     }
         private void sendNotification(String id_viaje,String titulo) {
@@ -69,9 +70,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-            CharSequence ticker ="Nuevo Viaje:"+titulo;
-            CharSequence contentTitle = "Nuevo Viaje:"+titulo;
-            CharSequence contentText = "aca iria la ubicacion del viaje nuevo";
+            CharSequence ticker =titulo;
+            CharSequence contentTitle = titulo;
+            CharSequence contentText = "aca va el detalle";
             Notification noti = new android.support.v7.app.NotificationCompat.Builder(this)
 
                     .setTicker(ticker)

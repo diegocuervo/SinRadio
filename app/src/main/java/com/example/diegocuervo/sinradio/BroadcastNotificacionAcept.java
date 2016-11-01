@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -61,8 +62,8 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
                 HttpPost post = new HttpPost(baseUrl);
 
                 List<NameValuePair> nvp = new ArrayList<NameValuePair>(1);
-                nvp.add(new BasicNameValuePair("android_id",  Estado_Singleton.getInstance().android_id));
-
+                nvp.add(new BasicNameValuePair("android_id", Settings.Secure.getString(contexto.getContentResolver(), Settings.Secure.ANDROID_ID)));
+                Log.w("android ID", Settings.Secure.getString(contexto.getContentResolver(), Settings.Secure.ANDROID_ID));
 
                 // post.setHeader("Content-type", "application/json");
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
