@@ -121,9 +121,9 @@ private class MyHttpGetRequest extends AsyncTask<String, Integer, String> {
                 ArrayList<String> elementos = new ArrayList<String>();
 
                 elementos.add(jsonObject.getString("id"));
-                elementos.add(jsonObject.getString("lat"));
-                elementos.add(jsonObject.getString("lon"));
                 elementos.add(jsonObject.getString("dir"));
+                elementos.add(jsonObject.getString("fecha"));
+                elementos.add(jsonObject.getString("detalle"));
                 elementos.add(jsonObject.getString("monto"));
                 tabla.agregarFilaTabla(elementos);
                 k++;
