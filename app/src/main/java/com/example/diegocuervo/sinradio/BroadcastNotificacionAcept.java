@@ -36,6 +36,7 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
         NotificationManager mNM = (NotificationManager) context.getSystemService(s);
         mNM.cancel(notificationID);
         String id_viaje = answerBundle.getString("id_vi");
+
     this.contexto=context;
 
         Log.w("agarro parametro", answerBundle.getString("id_vi"));
@@ -65,17 +66,13 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
                 nvp.add(new BasicNameValuePair("android_id", Settings.Secure.getString(contexto.getContentResolver(), Settings.Secure.ANDROID_ID)));
                 Log.w("android ID", Settings.Secure.getString(contexto.getContentResolver(), Settings.Secure.ANDROID_ID));
 
-                // post.setHeader("Content-type", "application/json");
+
                 post.setEntity(new UrlEncodedFormEntity(nvp,"UTF-8"));
 
                 HttpResponse response = httpClient.execute(post);
                 Log.w(APP_TAG, response.getStatusLine().toString());
                 int resCode = response.getStatusLine().getStatusCode();
 
-                if(resCode==404 || resCode==410){
-
-                    //  Toast.makeText(getApplicationContext(), "Problemas con la coneccion. Pruebe mas tarde.", Toast.LENGTH_SHORT).show();
-                }
 
                 in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 StringBuffer sb = new StringBuffer("");

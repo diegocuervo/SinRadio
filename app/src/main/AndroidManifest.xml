@@ -18,13 +18,13 @@
         android:supportsRtl="true"
 
         android:theme="@style/AppTheme">
-        <receiver android:name=".AutoArranque" >
+      <!--  <receiver android:name=".AutoArranque" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
         <receiver android:name=".BroadcastNotificacionAcept" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -86,30 +86,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".NotificationView"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-
-            </intent-filter>
-        </activity>
-        <activity android:name=".Notificacion"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-
-            </intent-filter>
-        </activity>
-        <activity android:name=".TTS"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-
-            </intent-filter>
-        </activity>
         <activity android:name=".Gps_ubicacion"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -118,14 +95,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".ProbandoServer"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-
-            </intent-filter>
-        </activity>
         <activity android:name=".ValidacionSMS"
             android:screenOrientation="portrait">
             <intent-filter>
