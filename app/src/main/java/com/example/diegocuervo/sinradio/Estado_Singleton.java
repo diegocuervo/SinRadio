@@ -11,7 +11,7 @@ public class Estado_Singleton {
 
     private static Estado_Singleton intancia= null;
 
-    public int estado_actual;
+    public int estado_actual=0;
     public String android_id;
     protected Estado_Singleton(){}
 

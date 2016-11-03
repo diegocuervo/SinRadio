@@ -41,27 +41,27 @@ public class Estado  extends AppCompatActivity {
 
     public void btn_libre(View view) {
 
-        Estado_Singleton.getInstance().estado_actual=1;
+        Estado_Singleton.getInstance().estado_actual=0;
 
 
     }
     public void btn_ocupado(View view) {
-        Estado_Singleton.getInstance().estado_actual=2;
+        Estado_Singleton.getInstance().estado_actual=1;
 
     }
 
     public void btn_llegando(View view) {
-        Estado_Singleton.getInstance().estado_actual=3;
+        Estado_Singleton.getInstance().estado_actual=2;
 
     }
     public void btn_esperando(View view) {
-        Estado_Singleton.getInstance().estado_actual=4;
+        Estado_Singleton.getInstance().estado_actual=3;
 
     }
 
 
     public void btn_inhabilitado(View view) {
-        Estado_Singleton.getInstance().estado_actual=5;
+        Estado_Singleton.getInstance().estado_actual=4;
 
     }
 
