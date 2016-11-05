@@ -84,7 +84,9 @@ public Activity actividad;
 
                 @Override
                 public void run() {
+
                    estado=Estado_Singleton.getInstance().estado_actual;
+                    /*
                     locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
                     Location loc =
@@ -107,6 +109,27 @@ public Activity actividad;
                     locManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER, 1000, 0,
                             locListener);
+*/
+
+
+
+
+
+                    GPSTracker gps = new GPSTracker(actividad);
+
+
+                    if(gps.canGetLocation()){
+
+                        latitude = gps.getLatitude();
+                        longitude= gps.getLongitude();
+
+                    }else{
+
+                        gps.showSettingsAlert();
+                    }
+                    Toast.makeText(actividad,latitude.toString(), Toast.LENGTH_SHORT).show();
+
+
 
 
                     JSONObject jsonObject = new JSONObject();
@@ -144,8 +167,7 @@ public Activity actividad;
                 Log.e("test", "gps is on send");
                 latitude = (location.getLatitude());
                 longitude = (location.getLongitude());
-                Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
-                Log.e("test", "location send");
+
 
 
 
