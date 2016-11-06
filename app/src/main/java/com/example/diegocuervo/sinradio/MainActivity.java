@@ -86,30 +86,6 @@ public Activity actividad;
                 public void run() {
 
                    estado=Estado_Singleton.getInstance().estado_actual;
-                    /*
-                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-                    Location loc =
-                            locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    updateWithNewLocation(loc);
-                    locListener = new LocationListener() {
-                        public void onLocationChanged(Location location) {
-                            updateWithNewLocation(location);
-                        }
-                        public void onProviderDisabled(String provider){
-
-                        }
-                        public void onProviderEnabled(String provider){
-
-                        }
-                        public void onStatusChanged(String provider, int status, Bundle extras){
-
-                        }
-                    };
-                    locManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER, 1000, 0,
-                            locListener);
-*/
 
 
 
@@ -128,13 +104,7 @@ public Activity actividad;
                         gps.showSettingsAlert();
                     }
                     Toast.makeText(actividad,latitude.toString(), Toast.LENGTH_SHORT).show();
-
-
-
-
                     JSONObject jsonObject = new JSONObject();
-
-
                     try {
 
                         jsonObject.put("lat", latitude);
@@ -150,37 +120,12 @@ public Activity actividad;
                     String baseUrl = "http://API.SIN-RADIO.COM.AR/posicion/"+id;
                     new MyHttpPostRequest().execute(baseUrl, data);
                     Log.w(APP_TAG, "Mensaje cada 5 segundos de main activity "+latitude);
-
-
-
-
                 }
 
         });
         }
 
-    private void updateWithNewLocation(Location location) {
-        String latLongString = "";
-        try {
-            if (location != null) {
 
-                Log.e("test", "gps is on send");
-                latitude = (location.getLatitude());
-                longitude = (location.getLongitude());
-
-
-
-
-
-                latLongString = "Lat:" + latitude + "\nLong:" + longitude;
-                Log.w("CurrentLocLatLong", latLongString);
-            } else {
-                latLongString = "No location found";
-            }
-        } catch (Exception e) {
-        }
-
-    }
     };
     private class MyHttpPostRequest extends AsyncTask<String, Integer, String> {
         Integer resCode =1;
