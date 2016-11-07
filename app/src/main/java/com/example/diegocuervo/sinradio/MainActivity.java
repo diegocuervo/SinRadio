@@ -17,6 +17,7 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.ActivityChooserView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
@@ -45,8 +46,6 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 private Timer timer;
 public Activity actividad;
-    private LocationManager locManager;
-    private LocationListener locListener;
     private TextView nombre;
     private String nom;
 
@@ -60,7 +59,7 @@ public Activity actividad;
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
         nombre.setText(nom);
-
+        Estado_Singleton.getInstance().chofer=nom;
         this.actividad=this;
 
         String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/token/"+Estado_Singleton.getInstance().android_id;
@@ -103,7 +102,7 @@ public Activity actividad;
 
                         gps.showSettingsAlert();
                     }
-                    Toast.makeText(actividad,latitude.toString(), Toast.LENGTH_SHORT).show();
+
                     JSONObject jsonObject = new JSONObject();
                     try {
 
@@ -229,6 +228,8 @@ public Activity actividad;
         moveTaskToBack(true);
 
     }
+
+  
 
     private class MyHttpPostRequestToken extends AsyncTask<String, Integer, String> {
 

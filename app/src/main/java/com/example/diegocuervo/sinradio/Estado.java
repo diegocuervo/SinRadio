@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -36,6 +37,10 @@ public class Estado  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.estados);
+       String nom= Estado_Singleton.getInstance().chofer;
+        TextView nombre = (TextView)findViewById(R.id.textView);
+        nombre.setText(nom);
+
         this.actividad=this;
     }
 

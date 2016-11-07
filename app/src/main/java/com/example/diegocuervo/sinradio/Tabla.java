@@ -105,7 +105,7 @@ public class Tabla{
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GRAY);
                 System.out.println("Row clicked: " + v.getId());
-                 TextView destino = (TextView)fila.getChildAt(3);
+                 TextView destino = (TextView)fila.getChildAt(1);
                 TextView id = (TextView)fila.getChildAt(0);
                 String id_viaje= id.getText().toString();
                 String destino_viaje= destino.getText().toString();
@@ -160,7 +160,7 @@ public class Tabla{
 
         final TextView textView = (TextView) promptView.findViewById(R.id.textView);
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
-        textView.setText("Ingrese el Monto para el viaje con destino a "+destino);
+        textView.setText("Ingrese el Monto para el viaje con origen en "+destino);
 
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
