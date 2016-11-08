@@ -48,11 +48,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
        String id_viaje= cuerpo.get("idViaje");
         String titulo= cuerpo.get("body");
         String detalle= cuerpo.get("detalle");
-
-       sendNotification(id_viaje,titulo,detalle);
-
+        String tipo= cuerpo.get("tipo");
+        if(tipo.equalsIgnoreCase("nuevo viaje!")) {
+            sendNotificationViaje(id_viaje, titulo, detalle);
+        }
+        else {
+            sendNotificationAlerta(id_viaje, titulo, detalle);
+        }
     }
-        private void sendNotification(String id_viaje,String titulo, String detalle) {
+        private void sendNotificationViaje(String id_viaje,String titulo, String detalle) {
             int notificationID = 1;
             Log.w("cuerpo noti", id_viaje);
             Intent i = new Intent(this, BroadcastNotificacionAcept.class);
@@ -94,6 +98,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             nm.notify(notificationID, noti);
         }
 
+    private void sendNotificationAlerta(String id_viaje,String titulo, String detalle) {
+        int notificationID = 1;
+        Log.w("cuerpo noti", id_viaje);
+
+        long[] pattern = new long[]{1000,2000,2000};
+
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+
+        NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
+        CharSequence ticker =titulo;
+        CharSequence contentTitle = titulo;
+        CharSequence contentText = detalle;
+        Notification noti = new android.support.v7.app.NotificationCompat.Builder(this)
+
+                .setTicker(ticker)
+                .setContentTitle(contentTitle)
+                .setContentText(contentText)
+                .setSmallIcon(R.drawable.taxi)
+                .setLargeIcon((((BitmapDrawable)getResources()
+                        .getDrawable(R.drawable.iconotaxi)).getBitmap()))
+                .setSound(defaultSound)
+                .setLights(Color.BLUE, 1, 0)
+                .setVibrate(pattern)
+                .build();
+        nm.notify(notificationID, noti);
+    }
 
     }
 

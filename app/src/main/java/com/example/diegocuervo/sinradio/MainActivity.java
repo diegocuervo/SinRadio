@@ -48,7 +48,8 @@ private Timer timer;
 public Activity actividad;
     private TextView nombre;
     private String nom;
-
+    Double latitude;
+    Double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,7 @@ public Activity actividad;
 
     class EnviarPosicion extends TimerTask {
         public String APP_TAG = "SinRadio-Chofer";
-        Double latitude;
-        Double longitude;
+
         Integer estado;
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         @Override
@@ -220,8 +220,81 @@ public Activity actividad;
 
     public void btn_emergencia(View view) {
 
+
+        String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/emergencia";
+        new MyHttpPostRequestEmergencia().execute(baseUrl);
+
+
     }
 
+    private class MyHttpPostRequestEmergencia extends AsyncTask<String, Integer, String> {
+
+        public String APP_TAG = "emergencia";
+        Integer resCode = 1;
+
+        protected String doInBackground(String... params) {
+            BufferedReader in = null;
+            String baseUrl = params[0];
+
+            try {
+
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost post = new HttpPost(baseUrl);
+
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
+                nvp.add(new BasicNameValuePair("id", Estado_Singleton.getInstance().android_id));
+                nvp.add(new BasicNameValuePair("latitud", latitude.toString()));
+                nvp.add(new BasicNameValuePair("longitud", longitude.toString()));
+
+                post.setEntity(new UrlEncodedFormEntity(nvp, "UTF-8"));
+
+                HttpResponse response = httpClient.execute(post);
+                Log.w(APP_TAG, response.getStatusLine().toString());
+                resCode = response.getStatusLine().getStatusCode();
+
+
+                in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                String NL = System.getProperty("line.separator");
+                while ((line = in.readLine()) != null) {
+                    sb.append(line + NL);
+                }
+                in.close();
+                return sb.toString();
+
+            } catch (Exception e) {
+                return "ERROR:Verifique su coneccion a internet.";
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
+        protected void onProgressUpdate(Integer... progress) {
+            Log.w(APP_TAG,"Indicador de pregreso " + progress[0].toString());
+        }
+
+        protected void onPostExecute(String result) {
+            Log.w(APP_TAG,"Resultado obtenido " + result);
+
+            if(resCode!=1){
+
+            }
+            else{
+                Toast.makeText(actividad,"ERROR:Verifique su coneccion a internet.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
     @Override
     public void onBackPressed() {
 
@@ -229,7 +302,7 @@ public Activity actividad;
 
     }
 
-  
+
 
     private class MyHttpPostRequestToken extends AsyncTask<String, Integer, String> {
 
