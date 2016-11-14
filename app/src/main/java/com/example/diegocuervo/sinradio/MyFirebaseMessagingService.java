@@ -49,12 +49,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String titulo= cuerpo.get("body");
         String detalle= cuerpo.get("detalle");
         String tipo= cuerpo.get("tipo");
-        if(tipo.equalsIgnoreCase("nuevo viaje!")) {
-            sendNotificationViaje(id_viaje, titulo, detalle);
-        }
-        else {
-            sendNotificationAlerta(id_viaje, titulo, detalle);
-        }
+        //if(tipo.equalsIgnoreCase("nuevo viaje!")) {
+       //     sendNotificationViaje(id_viaje, titulo, detalle);
+      //  }
+      //  else {
+        //    sendNotificationAlerta(id_viaje, titulo, detalle);
+      //  }
     }
         private void sendNotificationViaje(String id_viaje,String titulo, String detalle) {
             int notificationID = 1;

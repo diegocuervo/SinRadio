@@ -44,11 +44,11 @@ public class Validacion_inicial extends AppCompatActivity {
     String numero;
     EditText num_text;
     Integer resCode = 1;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.validacion_inicial);
         this.actividad = this;
+        Estado_Singleton.getInstance().android_id=Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
 
         new HttpGetDemo().execute();
     }

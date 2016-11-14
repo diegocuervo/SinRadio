@@ -51,12 +51,15 @@ public Activity actividad;
     Double latitude;
     Double longitude;
 
+
+    String id = Estado_Singleton.getInstance().android_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Estado_Singleton.getInstance().android_id=Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
         nombre.setText(nom);
@@ -76,7 +79,7 @@ public Activity actividad;
         public String APP_TAG = "SinRadio-Chofer";
 
         Integer estado;
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
@@ -85,14 +88,7 @@ public Activity actividad;
                 public void run() {
 
                    estado=Estado_Singleton.getInstance().estado_actual;
-
-
-
-
-
                     GPSTracker gps = new GPSTracker(actividad);
-
-
                     if(gps.canGetLocation()){
 
                         latitude = gps.getLatitude();
@@ -221,7 +217,7 @@ public Activity actividad;
     public void btn_emergencia(View view) {
 
 
-        String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/emergencia";
+        String baseUrl = "http://API.SIN-RADIO.COM.AR/chofer/"+ Estado_Singleton.getInstance().android_id+"/emergencia";
         new MyHttpPostRequestEmergencia().execute(baseUrl);
 
 
@@ -242,10 +238,10 @@ public Activity actividad;
 
                 HttpPost post = new HttpPost(baseUrl);
 
-                List<NameValuePair> nvp = new ArrayList<NameValuePair>(3);
-                nvp.add(new BasicNameValuePair("id", Estado_Singleton.getInstance().android_id));
-                nvp.add(new BasicNameValuePair("latitud", latitude.toString()));
-                nvp.add(new BasicNameValuePair("longitud", longitude.toString()));
+                List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
+
+                nvp.add(new BasicNameValuePair("lat", latitude.toString()));
+                nvp.add(new BasicNameValuePair("lon", longitude.toString()));
 
                 post.setEntity(new UrlEncodedFormEntity(nvp, "UTF-8"));
 
@@ -265,7 +261,7 @@ public Activity actividad;
                 return sb.toString();
 
             } catch (Exception e) {
-                return "ERROR:Verifique su coneccion a internet.";
+                return "ERROR:Verifique su coneccion a internet."+e;
             } finally {
                 if (in != null) {
                     try {
@@ -286,7 +282,7 @@ public Activity actividad;
             Log.w(APP_TAG,"Resultado obtenido " + result);
 
             if(resCode!=1){
-
+                Toast.makeText(actividad,"Emergencia Notificada a la Central.", Toast.LENGTH_SHORT).show();
             }
             else{
                 Toast.makeText(actividad,"ERROR:Verifique su coneccion a internet.", Toast.LENGTH_SHORT).show();
