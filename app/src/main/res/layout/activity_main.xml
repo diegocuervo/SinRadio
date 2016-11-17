@@ -35,12 +35,12 @@
             android:layout_width="227dp"
             android:layout_height="50dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Nro de Movil"
+            android:text="Estado: Libre"
             android:id="@+id/textView2"
             android:layout_gravity="center"
             android:textColor="@color/abc_input_method_navigation_guard"
             android:textSize="25sp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="20dp" />
     </FrameLayout>
 

@@ -13,6 +13,7 @@ public class Estado_Singleton {
 
     public int estado_actual=0;
     public String chofer;
+    public String estado_texto="Libre";
     public String android_id;
     protected Estado_Singleton(){}
 

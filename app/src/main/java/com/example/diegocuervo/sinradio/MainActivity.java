@@ -50,7 +50,7 @@ public Activity actividad;
     private String nom;
     Double latitude;
     Double longitude;
-
+    private TextView estado_enviado;
 
     String id = Estado_Singleton.getInstance().android_id;
     @Override
@@ -62,7 +62,10 @@ public Activity actividad;
 
         nom= getIntent().getExtras().getString("nombre");
         nombre = (TextView)findViewById(R.id.textView);
-        nombre.setText(nom);
+        nombre.setText("Chofer: "+nom);
+
+        estado_enviado = (TextView)findViewById(R.id.textView2);
+        estado_enviado.setText("Estado: Libre");
         Estado_Singleton.getInstance().chofer=nom;
         this.actividad=this;
 
@@ -77,7 +80,7 @@ public Activity actividad;
 
     class EnviarPosicion extends TimerTask {
         public String APP_TAG = "SinRadio-Chofer";
-
+        String estado_text;
         Integer estado;
 
         @Override
@@ -88,6 +91,9 @@ public Activity actividad;
                 public void run() {
 
                    estado=Estado_Singleton.getInstance().estado_actual;
+                    estado_text=Estado_Singleton.getInstance().estado_texto;
+                    estado_enviado = (TextView)findViewById(R.id.textView2);
+                    estado_enviado.setText("Estado: "+estado_text);
                     GPSTracker gps = new GPSTracker(actividad);
                     if(gps.canGetLocation()){
 

@@ -31,7 +31,8 @@ import java.util.List;
  */
 public class Estado  extends AppCompatActivity {
     private Activity actividad;
-
+    private TextView estado_enviado;
+     String estado_text;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,35 +40,43 @@ public class Estado  extends AppCompatActivity {
         setContentView(R.layout.estados);
        String nom= Estado_Singleton.getInstance().chofer;
         TextView nombre = (TextView)findViewById(R.id.textView);
-        nombre.setText(nom);
+        nombre.setText("Chofer: "+nom);
 
+        estado_text=Estado_Singleton.getInstance().estado_texto;
+        estado_enviado = (TextView)findViewById(R.id.textView2);
+        estado_enviado.setText("Estado: "+estado_text);
         this.actividad=this;
     }
 
     public void btn_libre(View view) {
-
+        Estado_Singleton.getInstance().estado_texto="Libre";
         Estado_Singleton.getInstance().estado_actual=0;
-
+        actividad.onBackPressed();
 
     }
     public void btn_ocupado(View view) {
+        Estado_Singleton.getInstance().estado_texto="Ocupado";
         Estado_Singleton.getInstance().estado_actual=1;
-
+        actividad.onBackPressed();
     }
 
     public void btn_llegando(View view) {
+        Estado_Singleton.getInstance().estado_texto="LLegando";
         Estado_Singleton.getInstance().estado_actual=2;
-
+        actividad.onBackPressed();
     }
     public void btn_esperando(View view) {
+        Estado_Singleton.getInstance().estado_texto="Esperando";
         Estado_Singleton.getInstance().estado_actual=3;
 
+        actividad.onBackPressed();
     }
 
 
     public void btn_inhabilitado(View view) {
+        Estado_Singleton.getInstance().estado_texto="Inhabilitado";
         Estado_Singleton.getInstance().estado_actual=4;
-
+        actividad.onBackPressed();
     }
 
 }

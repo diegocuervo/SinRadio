@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:textColor="@color/abc_input_method_navigation_guard"
             android:textSize="25sp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="20dp" />
     </FrameLayout>
 
