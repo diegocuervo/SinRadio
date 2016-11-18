@@ -41,21 +41,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-
         cuerpo = remoteMessage.getData();
 
         Log.w("probando noti", "entro a onmessagereceived"+cuerpo);
-       String id_viaje= cuerpo.get("idViaje");
+        String tipo= cuerpo.get("title");
+
         String titulo= cuerpo.get("body");
-        String detalle= cuerpo.get("detalle");
-     //   String tipo= cuerpo.get("tipo");
-      //  if(tipo.equalsIgnoreCase("nuevo viaje!")) {
-            sendNotificationViaje(id_viaje, titulo, detalle);
-      // }
-     //   else {
-       //     sendNotificationAlerta(id_viaje, titulo, detalle);
-     //  }
+
+
+       if(tipo.equalsIgnoreCase("Alerta vial!")){
+
+           sendNotificationAlerta(titulo);
+       }
+        else {
+           String id_viaje= cuerpo.get("idViaje");
+           String detalle= cuerpo.get("detalle");
+           sendNotificationViaje(id_viaje, titulo, detalle);
+      }
     }
+
         private void sendNotificationViaje(String id_viaje,String titulo, String detalle) {
             int notificationID = 1;
             Log.w("cuerpo noti", id_viaje);
@@ -87,7 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setSmallIcon(R.drawable.taxi)
                     .setLargeIcon((((BitmapDrawable)getResources()
                             .getDrawable(R.drawable.iconotaxi)).getBitmap()))
-                    //  .addAction(R.drawable.taxi, ticker, pendingIntent)
+
 
                     .addAction(android.R.drawable.ic_menu_send, "Aceptar", aceptIntent)
                     .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", cancelIntent)
@@ -98,9 +102,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             nm.notify(notificationID, noti);
         }
 
-    private void sendNotificationAlerta(String id_viaje,String titulo, String detalle) {
+    private void sendNotificationAlerta(String titulo) {
         int notificationID = 1;
-        Log.w("cuerpo noti", id_viaje);
+
 
         long[] pattern = new long[]{1000,2000,2000};
 
@@ -109,9 +113,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-        CharSequence ticker =titulo;
-        CharSequence contentTitle = titulo;
-        CharSequence contentText = detalle;
+        CharSequence ticker ="Alerta Vial!";
+        CharSequence contentTitle = "Alerta Vial!";
+        CharSequence contentText = titulo;
         Notification noti = new android.support.v7.app.NotificationCompat.Builder(this)
 
                 .setTicker(ticker)

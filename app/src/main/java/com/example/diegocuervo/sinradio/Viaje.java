@@ -122,7 +122,7 @@ private class MyHttpGetRequest extends AsyncTask<String, Integer, String> {
 
                 elementos.add(jsonObject.getString("id"));
                 elementos.add(jsonObject.getString("dir"));
-                elementos.add(jsonObject.getString("fecha"));
+                elementos.add(jsonObject.getString("fecha").substring(0,10)+" "+jsonObject.getString("fecha").substring(11,19));
                 elementos.add(jsonObject.getString("detalle"));
                 elementos.add(jsonObject.getString("monto"));
                 tabla.agregarFilaTabla(elementos);
