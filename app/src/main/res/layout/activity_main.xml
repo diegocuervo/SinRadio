@@ -1,90 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.diegocuervo.sinradio.MainActivity">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="370dp"
+    <android.support.percent.PercentFrameLayout
+        app:layout_heightPercent="22%"
+        app:layout_widthPercent="100%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+
         android:background="@color/yellow"
         android:id="@+id/frameLayout">
 
         <TextView
-            android:layout_width="262dp"
-            android:layout_height="82dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_marginTopPercent="15%"
             android:text="Nombre del Chofer"
             android:id="@+id/textView"
-            android:layout_gravity="center_horizontal|top"
+            app:layout_marginLeftPercent="20%"
             android:textColor="@color/abc_input_method_navigation_guard"
             android:textSize="25sp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp" />
+            />
 
         <TextView
-            android:layout_width="227dp"
-            android:layout_height="50dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_marginLeftPercent="20%"
+            app:layout_marginTopPercent="50%"
             android:text="Estado: Libre"
             android:id="@+id/textView2"
-            android:layout_gravity="center"
+
             android:textColor="@color/abc_input_method_navigation_guard"
             android:textSize="25sp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="20dp" />
-    </FrameLayout>
+           />
+    </android.support.percent.PercentFrameLayout>
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        app:layout_heightPercent="10%"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
         android:text="Estado"
         android:id="@+id/button"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="135dp"
+
+        app:layout_marginTopPercent="30%"
         android:textSize="25sp"
         android:onClick="btn_estado" />
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        app:layout_heightPercent="10%"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
         android:text="Viajes"
         android:id="@+id/button2"
         android:textSize="25sp"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button"
+        app:layout_marginTopPercent="45%"
+
         android:onClick="btn_viaje" />
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        app:layout_heightPercent="10%"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:text="Emergencia"
         android:id="@+id/button3"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
+        app:layout_marginTopPercent="60%"
+
         android:textSize="25sp"
         android:onClick="btn_emergencia" />
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        app:layout_heightPercent="10%"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:text="Salir"
         android:id="@+id/button4"
-        android:layout_below="@+id/button3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp"
+        app:layout_marginTopPercent="75%"
+
         android:textSize="25sp"
         android:onClick="btn_salir" />
 
@@ -100,4 +109,4 @@
         android:layout_marginBottom="-35dp"
         android:layout_marginRight="-25dp" />
 
-</RelativeLayout>
+</android.support.percent.PercentRelativeLayout>

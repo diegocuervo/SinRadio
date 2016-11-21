@@ -105,7 +105,8 @@ public class BroadcastNotificacionAcept extends BroadcastReceiver {
         protected void onPostExecute(String result) {
             Log.w(APP_TAG,"Resultado obtenido " + result);
             Toast.makeText(contexto, result, Toast.LENGTH_SHORT).show();
-
+            Estado_Singleton.getInstance().estado_texto="Ocupado";
+            Estado_Singleton.getInstance().estado_actual=1;
 
         }
 

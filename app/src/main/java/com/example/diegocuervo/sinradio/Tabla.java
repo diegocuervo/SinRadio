@@ -274,6 +274,8 @@ private class MyHttpPutRequest extends AsyncTask<String, Integer, String> {
         Log.w(APP_TAG,"Resultado obtenido " + result);
 
        Toast.makeText(actividad, result, Toast.LENGTH_SHORT).show();
+        Estado_Singleton.getInstance().estado_texto="Libre";
+        Estado_Singleton.getInstance().estado_actual=0;
 actividad.onBackPressed();
 
     }
