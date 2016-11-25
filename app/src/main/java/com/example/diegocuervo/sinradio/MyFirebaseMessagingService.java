@@ -82,7 +82,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             CharSequence ticker =titulo;
             CharSequence contentTitle = titulo;
-            CharSequence contentText = detalle;
+            CharSequence contentText =titulo+"-"+ detalle;
             Notification noti = new android.support.v7.app.NotificationCompat.Builder(this)
 
                     .setTicker(ticker)

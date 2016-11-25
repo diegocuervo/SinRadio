@@ -48,7 +48,7 @@
     </android.support.percent.PercentFrameLayout>
 
     <Button
-        app:layout_heightPercent="10%"
+        app:layout_heightPercent="12%"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,7 +61,7 @@
         android:onClick="btn_estado" />
 
     <Button
-        app:layout_heightPercent="10%"
+        app:layout_heightPercent="12%"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -74,7 +74,7 @@
         android:onClick="btn_viaje" />
 
     <Button
-        app:layout_heightPercent="10%"
+        app:layout_heightPercent="12%"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -86,7 +86,7 @@
         android:onClick="btn_emergencia" />
 
     <Button
-        app:layout_heightPercent="10%"
+        app:layout_heightPercent="12%"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
